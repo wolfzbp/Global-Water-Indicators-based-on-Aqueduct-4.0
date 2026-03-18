@@ -1,0 +1,2924 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>data_cleaning</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="data_cleaning_files/libs/clipboard/clipboard.min.js"></script>
+<script src="data_cleaning_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="data_cleaning_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="data_cleaning_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="data_cleaning_files/libs/quarto-html/popper.min.js"></script>
+<script src="data_cleaning_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="data_cleaning_files/libs/quarto-html/anchor.min.js"></script>
+<link href="data_cleaning_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="data_cleaning_files/libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="data_cleaning_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="data_cleaning_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="data_cleaning_files/libs/bootstrap/bootstrap-9e3ffae467580fdb927a41352e75a2e0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+
+
+
+<hr>
+<section id="preparación-y-limpieza-de-datos" class="level1">
+<h1><strong>Preparación y limpieza de datos</strong></h1>
+<hr>
+<p>En esta sección se describe el proceso de carga, exploración, filtrado y transformación del dataset utilizado en el análisis.</p>
+<p>El objetivo es preparar un conjunto de datos consistente y adecuado para la construcción de visualizaciones que permitan analizar el riesgo hídrico en las provincias del Ecuador, y compararlo de manera global.</p>
+<p>El dataset se obtuvo de: <a href="https://www.wri.org/data/aqueduct-global-maps-40-data#download-form">Aqueduct 4.0 Current and Future Global Maps Data</a></p>
+<section id="carga-de-dataset" class="level2">
+<h2 class="anchored" data-anchor-id="carga-de-dataset"><strong>Carga de dataset</strong></h2>
+<div id="38c21c05" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<blockquote class="blockquote">
+<p>Se cargo el dataset a un release de Github para poder leerlo desde una URL publica</p>
+</blockquote>
+<div id="06735101" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://github.com/wolfzbp/Global-Water-Indicators-based-on-Aqueduct-4.0/releases/download/v1.0/Aqueduct40_baseline_annual_y2023m07d05.csv"</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(url)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>df</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="23">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">string_id</th>
+<th data-quarto-table-cell-role="th">aq30_id</th>
+<th data-quarto-table-cell-role="th">pfaf_id</th>
+<th data-quarto-table-cell-role="th">gid_1</th>
+<th data-quarto-table-cell-role="th">aqid</th>
+<th data-quarto-table-cell-role="th">gid_0</th>
+<th data-quarto-table-cell-role="th">name_0</th>
+<th data-quarto-table-cell-role="th">name_1</th>
+<th data-quarto-table-cell-role="th">area_km2</th>
+<th data-quarto-table-cell-role="th">bws_raw</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">w_awr_tex_qal_label</th>
+<th data-quarto-table-cell-role="th">w_awr_tex_rrr_raw</th>
+<th data-quarto-table-cell-role="th">w_awr_tex_rrr_score</th>
+<th data-quarto-table-cell-role="th">w_awr_tex_rrr_cat</th>
+<th data-quarto-table-cell-role="th">w_awr_tex_rrr_label</th>
+<th data-quarto-table-cell-role="th">w_awr_tex_tot_raw</th>
+<th data-quarto-table-cell-role="th">w_awr_tex_tot_score</th>
+<th data-quarto-table-cell-role="th">w_awr_tex_tot_cat</th>
+<th data-quarto-table-cell-role="th">w_awr_tex_tot_label</th>
+<th data-quarto-table-cell-role="th">w_awr_tex_tot_weight_fraction</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>111011-EGY.11_1-3365</td>
+<td>0</td>
+<td>111011</td>
+<td>EGY.11_1</td>
+<td>3365</td>
+<td>EGY</td>
+<td>Egypt</td>
+<td>Al Qahirah</td>
+<td>4.223754</td>
+<td>9999.0</td>
+<td>...</td>
+<td>Low - Medium (1-2)</td>
+<td>1.622678</td>
+<td>2.163858</td>
+<td>2.0</td>
+<td>Medium - High (2-3)</td>
+<td>2.509062</td>
+<td>3.705279</td>
+<td>3.0</td>
+<td>High (3-4)</td>
+<td>0.877551</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>111011-EGY.15_1-3365</td>
+<td>1</td>
+<td>111011</td>
+<td>EGY.15_1</td>
+<td>3365</td>
+<td>EGY</td>
+<td>Egypt</td>
+<td>As Suways</td>
+<td>1846.012343</td>
+<td>9999.0</td>
+<td>...</td>
+<td>Low - Medium (1-2)</td>
+<td>1.622678</td>
+<td>2.163858</td>
+<td>2.0</td>
+<td>Medium - High (2-3)</td>
+<td>2.509062</td>
+<td>3.705279</td>
+<td>3.0</td>
+<td>High (3-4)</td>
+<td>0.877551</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>111011-EGY.15_1-None</td>
+<td>2</td>
+<td>111011</td>
+<td>EGY.15_1</td>
+<td>-9999</td>
+<td>EGY</td>
+<td>Egypt</td>
+<td>As Suways</td>
+<td>30.526067</td>
+<td>9999.0</td>
+<td>...</td>
+<td>Low - Medium (1-2)</td>
+<td>1.622678</td>
+<td>2.163858</td>
+<td>2.0</td>
+<td>Medium - High (2-3)</td>
+<td>2.509062</td>
+<td>3.705279</td>
+<td>3.0</td>
+<td>High (3-4)</td>
+<td>0.877551</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>111011-None-3365</td>
+<td>3</td>
+<td>111011</td>
+<td>-9999</td>
+<td>3365</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>0.742712</td>
+<td>9999.0</td>
+<td>...</td>
+<td>No data</td>
+<td>-9999.000000</td>
+<td>-9999.000000</td>
+<td>-9999.0</td>
+<td>No data</td>
+<td>-9999.000000</td>
+<td>-9999.000000</td>
+<td>-9999.0</td>
+<td>No data</td>
+<td>0.551020</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>111011-None-None</td>
+<td>4</td>
+<td>111011</td>
+<td>-9999</td>
+<td>-9999</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>13.430995</td>
+<td>9999.0</td>
+<td>...</td>
+<td>No data</td>
+<td>-9999.000000</td>
+<td>-9999.000000</td>
+<td>-9999.0</td>
+<td>No data</td>
+<td>-9999.000000</td>
+<td>-9999.000000</td>
+<td>-9999.0</td>
+<td>No data</td>
+<td>0.551020</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">...</th>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">68505</th>
+<td>None-YEM.5_1-None</td>
+<td>68506</td>
+<td>-9999</td>
+<td>YEM.5_1</td>
+<td>-9999</td>
+<td>YEM</td>
+<td>Yemen</td>
+<td>Al Hudaydah</td>
+<td>0.887022</td>
+<td>-9999.0</td>
+<td>...</td>
+<td>No data</td>
+<td>-9999.000000</td>
+<td>-9999.000000</td>
+<td>-9999.0</td>
+<td>No data</td>
+<td>-9999.000000</td>
+<td>-9999.000000</td>
+<td>-9999.0</td>
+<td>No data</td>
+<td>0.326531</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">68506</th>
+<td>None-ZAF.1_1-None</td>
+<td>68507</td>
+<td>-9999</td>
+<td>ZAF.1_1</td>
+<td>-9999</td>
+<td>ZAF</td>
+<td>South Africa</td>
+<td>Eastern Cape</td>
+<td>0.019523</td>
+<td>-9999.0</td>
+<td>...</td>
+<td>No data</td>
+<td>-9999.000000</td>
+<td>-9999.000000</td>
+<td>-9999.0</td>
+<td>No data</td>
+<td>-9999.000000</td>
+<td>-9999.000000</td>
+<td>-9999.0</td>
+<td>No data</td>
+<td>0.326531</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">68507</th>
+<td>None-ZAF.4_1-None</td>
+<td>68508</td>
+<td>-9999</td>
+<td>ZAF.4_1</td>
+<td>-9999</td>
+<td>ZAF</td>
+<td>South Africa</td>
+<td>KwaZulu-Natal</td>
+<td>0.085616</td>
+<td>-9999.0</td>
+<td>...</td>
+<td>No data</td>
+<td>-9999.000000</td>
+<td>-9999.000000</td>
+<td>-9999.0</td>
+<td>No data</td>
+<td>-9999.000000</td>
+<td>-9999.000000</td>
+<td>-9999.0</td>
+<td>No data</td>
+<td>0.326531</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">68508</th>
+<td>None-ZAF.9_1-2940</td>
+<td>68509</td>
+<td>-9999</td>
+<td>ZAF.9_1</td>
+<td>2940</td>
+<td>ZAF</td>
+<td>South Africa</td>
+<td>Western Cape</td>
+<td>0.015411</td>
+<td>-9999.0</td>
+<td>...</td>
+<td>No data</td>
+<td>-9999.000000</td>
+<td>-9999.000000</td>
+<td>-9999.0</td>
+<td>No data</td>
+<td>-9999.000000</td>
+<td>-9999.000000</td>
+<td>-9999.0</td>
+<td>No data</td>
+<td>0.326531</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">68509</th>
+<td>None-ZAF.9_1-None</td>
+<td>68510</td>
+<td>-9999</td>
+<td>ZAF.9_1</td>
+<td>-9999</td>
+<td>ZAF</td>
+<td>South Africa</td>
+<td>Western Cape</td>
+<td>0.449872</td>
+<td>-9999.0</td>
+<td>...</td>
+<td>No data</td>
+<td>-9999.000000</td>
+<td>-9999.000000</td>
+<td>-9999.0</td>
+<td>No data</td>
+<td>-9999.000000</td>
+<td>-9999.000000</td>
+<td>-9999.0</td>
+<td>No data</td>
+<td>0.326531</td>
+</tr>
+</tbody>
+</table>
+
+<p>68510 rows × 231 columns</p>
+</div>
+</div>
+</div>
+</section>
+<section id="seleccion-de-variables-de-interes" class="level2">
+<h2 class="anchored" data-anchor-id="seleccion-de-variables-de-interes"><strong>Seleccion de variables de interes</strong></h2>
+<div id="92b19861" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># clasificar columnas en categorias, y crear una lista de cada categoria con los nombres de las columnas correspondientes</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>identificadores <span class="op">=</span> [</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"string_id"</span>, </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"aq30_id"</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"name_0"</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"name_1"</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"area_km2"</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>riesgo_hidrologico <span class="op">=</span> [</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"bws_score"</span>,   <span class="co"># Baseline water stress es el score de estrés hídrico de referencia</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"bwd_score"</span>,   <span class="co"># Water depletion es el score de agotamiento del agua</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"iav_score"</span>,   <span class="co"># Interannual variability es el score de variabilidad interanual</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"sev_score"</span>,   <span class="co"># Seasonal variability es el score de variabilidad estacional</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"drr_score"</span>    <span class="co"># Drought risk es el score de riesgo de sequía</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>eventos_hidrologicos <span class="op">=</span> [</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># "gtd_score",   # Groundwater table decline es el score de riesgo de declive de la tabla de agua subterránea, pero no se encuentra en el dataset</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">"rfr_score"</span>,   <span class="co"># River flood risk es el score de riesgo de inundación fluvial</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">"cfr_score"</span>    <span class="co"># Coastal flood risk es el score de riesgo de inundación costera</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>calidad_agua <span class="op">=</span> [</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ucw_score"</span>,   <span class="co"># Untreated wastewater es el score de aguas residuales sin tratar</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="st">"cep_score"</span>,   <span class="co"># Coastal eutrophication es el score de eutrofización costera</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    <span class="st">"udw_score"</span>,   <span class="co"># No drinking water es el score de ausencia de agua potable</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    <span class="st">"usa_score"</span>    <span class="co"># No sanitation es el score de ausencia de saneamiento</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>por_industria <span class="op">=</span> [</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    <span class="st">"w_awr_agr_tot_score"</span>,   <span class="co"># Agriculture es el score de agricultura</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    <span class="st">"w_awr_che_tot_score"</span>,   <span class="co"># Chemicals es el score de productos químicos</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>    <span class="st">"w_awr_con_tot_score"</span>,   <span class="co"># Construction materials es el score de materiales de construcción</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    <span class="st">"w_awr_elp_tot_score"</span>,   <span class="co"># Electric power es el score de energía eléctrica</span></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>    <span class="st">"w_awr_fnb_tot_score"</span>,   <span class="co"># Food &amp; beverage es el score de alimentos y bebidas</span></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>    <span class="st">"w_awr_min_tot_score"</span>,   <span class="co"># Mining es el score de minería</span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>    <span class="st">"w_awr_ong_tot_score"</span>,   <span class="co"># Oil &amp; gas es el score de petróleo y gas</span></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>    <span class="st">"w_awr_smc_tot_score"</span>,   <span class="co"># Semiconductor es el score de semiconductor</span></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>    <span class="st">"w_awr_tex_tot_score"</span>    <span class="co"># Textile es el score de textil</span></span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="ead025ca" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>df_selected <span class="op">=</span> df[identificadores <span class="op">+</span> riesgo_hidrologico <span class="op">+</span> eventos_hidrologicos <span class="op">+</span> calidad_agua <span class="op">+</span> por_industria]</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>df_selected.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="25">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">string_id</th>
+<th data-quarto-table-cell-role="th">aq30_id</th>
+<th data-quarto-table-cell-role="th">name_0</th>
+<th data-quarto-table-cell-role="th">name_1</th>
+<th data-quarto-table-cell-role="th">area_km2</th>
+<th data-quarto-table-cell-role="th">bws_score</th>
+<th data-quarto-table-cell-role="th">bwd_score</th>
+<th data-quarto-table-cell-role="th">iav_score</th>
+<th data-quarto-table-cell-role="th">sev_score</th>
+<th data-quarto-table-cell-role="th">drr_score</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">usa_score</th>
+<th data-quarto-table-cell-role="th">w_awr_agr_tot_score</th>
+<th data-quarto-table-cell-role="th">w_awr_che_tot_score</th>
+<th data-quarto-table-cell-role="th">w_awr_con_tot_score</th>
+<th data-quarto-table-cell-role="th">w_awr_elp_tot_score</th>
+<th data-quarto-table-cell-role="th">w_awr_fnb_tot_score</th>
+<th data-quarto-table-cell-role="th">w_awr_min_tot_score</th>
+<th data-quarto-table-cell-role="th">w_awr_ong_tot_score</th>
+<th data-quarto-table-cell-role="th">w_awr_smc_tot_score</th>
+<th data-quarto-table-cell-role="th">w_awr_tex_tot_score</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>111011-EGY.11_1-3365</td>
+<td>0</td>
+<td>Egypt</td>
+<td>Al Qahirah</td>
+<td>4.223754</td>
+<td>5.0</td>
+<td>5.0</td>
+<td>5.0</td>
+<td>3.194805</td>
+<td>-9999.0</td>
+<td>...</td>
+<td>0.890711</td>
+<td>-9999.0</td>
+<td>3.787802</td>
+<td>4.162035</td>
+<td>4.278249</td>
+<td>4.318992</td>
+<td>3.324107</td>
+<td>2.095742</td>
+<td>4.067326</td>
+<td>3.705279</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>111011-EGY.15_1-3365</td>
+<td>1</td>
+<td>Egypt</td>
+<td>As Suways</td>
+<td>1846.012343</td>
+<td>5.0</td>
+<td>5.0</td>
+<td>5.0</td>
+<td>3.194805</td>
+<td>-9999.0</td>
+<td>...</td>
+<td>0.890711</td>
+<td>-9999.0</td>
+<td>3.787802</td>
+<td>4.162035</td>
+<td>4.278249</td>
+<td>4.318992</td>
+<td>3.324107</td>
+<td>2.095742</td>
+<td>4.067326</td>
+<td>3.705279</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>111011-EGY.15_1-None</td>
+<td>2</td>
+<td>Egypt</td>
+<td>As Suways</td>
+<td>30.526067</td>
+<td>5.0</td>
+<td>5.0</td>
+<td>5.0</td>
+<td>3.194805</td>
+<td>-9999.0</td>
+<td>...</td>
+<td>0.890711</td>
+<td>-9999.0</td>
+<td>3.787802</td>
+<td>4.162035</td>
+<td>4.278249</td>
+<td>4.318992</td>
+<td>3.324107</td>
+<td>2.095742</td>
+<td>4.067326</td>
+<td>3.705279</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>111011-None-3365</td>
+<td>3</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>0.742712</td>
+<td>5.0</td>
+<td>5.0</td>
+<td>5.0</td>
+<td>3.194805</td>
+<td>-9999.0</td>
+<td>...</td>
+<td>0.890711</td>
+<td>-9999.0</td>
+<td>-9999.000000</td>
+<td>-9999.000000</td>
+<td>4.288761</td>
+<td>-9999.000000</td>
+<td>-9999.000000</td>
+<td>-9999.000000</td>
+<td>-9999.000000</td>
+<td>-9999.000000</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>111011-None-None</td>
+<td>4</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>13.430995</td>
+<td>5.0</td>
+<td>5.0</td>
+<td>5.0</td>
+<td>3.194805</td>
+<td>-9999.0</td>
+<td>...</td>
+<td>0.890711</td>
+<td>-9999.0</td>
+<td>-9999.000000</td>
+<td>-9999.000000</td>
+<td>4.288761</td>
+<td>-9999.000000</td>
+<td>-9999.000000</td>
+<td>-9999.000000</td>
+<td>-9999.000000</td>
+<td>-9999.000000</td>
+</tr>
+</tbody>
+</table>
+
+<p>5 rows × 25 columns</p>
+</div>
+</div>
+</div>
+</section>
+<section id="gestionar-valores-nulls-e-inconsistentes" class="level2">
+<h2 class="anchored" data-anchor-id="gestionar-valores-nulls-e-inconsistentes"><strong>Gestionar valores nulls e inconsistentes</strong></h2>
+<div id="f2a456de" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># contar valores nulos por columna</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>df_selected.isna().<span class="bu">sum</span>().sort_values(ascending<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="26">
+<pre><code>name_0                 10022
+name_1                 10022
+string_id                  0
+aq30_id                    0
+area_km2                   0
+bws_score                  0
+bwd_score                  0
+iav_score                  0
+sev_score                  0
+drr_score                  0
+rfr_score                  0
+cfr_score                  0
+ucw_score                  0
+cep_score                  0
+udw_score                  0
+usa_score                  0
+w_awr_agr_tot_score        0
+w_awr_che_tot_score        0
+w_awr_con_tot_score        0
+w_awr_elp_tot_score        0
+w_awr_fnb_tot_score        0
+w_awr_min_tot_score        0
+w_awr_ong_tot_score        0
+w_awr_smc_tot_score        0
+w_awr_tex_tot_score        0
+dtype: int64</code></pre>
+</div>
+</div>
+<div id="dfeeb0bc" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>df_selected <span class="op">=</span> df_selected[<span class="op">~</span>(df_selected[<span class="st">'name_0'</span>].isna() <span class="op">|</span> df_selected[<span class="st">'name_1'</span>].isna())]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="bf57e057" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>df_selected.isnull().<span class="bu">sum</span>().sort_values(ascending<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="28">
+<pre><code>string_id              0
+aq30_id                0
+name_0                 0
+name_1                 0
+area_km2               0
+bws_score              0
+bwd_score              0
+iav_score              0
+sev_score              0
+drr_score              0
+rfr_score              0
+cfr_score              0
+ucw_score              0
+cep_score              0
+udw_score              0
+usa_score              0
+w_awr_agr_tot_score    0
+w_awr_che_tot_score    0
+w_awr_con_tot_score    0
+w_awr_elp_tot_score    0
+w_awr_fnb_tot_score    0
+w_awr_min_tot_score    0
+w_awr_ong_tot_score    0
+w_awr_smc_tot_score    0
+w_awr_tex_tot_score    0
+dtype: int64</code></pre>
+</div>
+</div>
+</section>
+<section id="eliminacion-de-valores-inconsistentes" class="level2">
+<h2 class="anchored" data-anchor-id="eliminacion-de-valores-inconsistentes"><strong>Eliminacion de valores inconsistentes</strong></h2>
+<div id="0aaf5912" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># contar los valores -9999 por cada columna, y mostrar el porcentaje respecto al total de filas, crear un nuevo dataframe con el resultado, y mostrarlo</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>missing_values_count <span class="op">=</span> df_selected.isin([<span class="op">-</span><span class="dv">9999</span>]).<span class="bu">sum</span>()</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>total_rows <span class="op">=</span> <span class="bu">len</span>(df_selected)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>missing_values_percentage <span class="op">=</span> (missing_values_count <span class="op">/</span> total_rows) <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>df_missing_values <span class="op">=</span> pd.DataFrame({<span class="st">'Missing Values'</span>: missing_values_count, <span class="st">'Percentage'</span>: missing_values_percentage})</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>df_missing_values[df_missing_values[<span class="st">'Percentage'</span>] <span class="op">&gt;</span> <span class="dv">0</span>].sort_values(by<span class="op">=</span><span class="st">'Percentage'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="29">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Missing Values</th>
+<th data-quarto-table-cell-role="th">Percentage</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">drr_score</th>
+<td>10993</td>
+<td>18.795308</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">w_awr_agr_tot_score</th>
+<td>9719</td>
+<td>16.617084</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">w_awr_fnb_tot_score</th>
+<td>4964</td>
+<td>8.487211</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">w_awr_smc_tot_score</th>
+<td>4611</td>
+<td>7.883668</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">w_awr_elp_tot_score</th>
+<td>4589</td>
+<td>7.846054</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">sev_score</th>
+<td>4537</td>
+<td>7.757147</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">iav_score</th>
+<td>4537</td>
+<td>7.757147</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">w_awr_con_tot_score</th>
+<td>4440</td>
+<td>7.591301</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">w_awr_tex_tot_score</th>
+<td>4403</td>
+<td>7.528040</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">w_awr_che_tot_score</th>
+<td>4030</td>
+<td>6.890302</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">bws_score</th>
+<td>3919</td>
+<td>6.700520</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">bwd_score</th>
+<td>3919</td>
+<td>6.700520</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">w_awr_min_tot_score</th>
+<td>3905</td>
+<td>6.676583</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">cep_score</th>
+<td>3464</td>
+<td>5.922582</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">w_awr_ong_tot_score</th>
+<td>2753</td>
+<td>4.706948</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">rfr_score</th>
+<td>2596</td>
+<td>4.438517</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">cfr_score</th>
+<td>2596</td>
+<td>4.438517</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">usa_score</th>
+<td>2596</td>
+<td>4.438517</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">udw_score</th>
+<td>2596</td>
+<td>4.438517</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">ucw_score</th>
+<td>787</td>
+<td>1.345575</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="07c48aca" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>df_cleaned <span class="op">=</span> df_selected[df_selected[<span class="st">'drr_score'</span>] <span class="op">!=</span> <span class="op">-</span><span class="dv">9999</span>]</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>df_cleaned</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="30">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">string_id</th>
+<th data-quarto-table-cell-role="th">aq30_id</th>
+<th data-quarto-table-cell-role="th">name_0</th>
+<th data-quarto-table-cell-role="th">name_1</th>
+<th data-quarto-table-cell-role="th">area_km2</th>
+<th data-quarto-table-cell-role="th">bws_score</th>
+<th data-quarto-table-cell-role="th">bwd_score</th>
+<th data-quarto-table-cell-role="th">iav_score</th>
+<th data-quarto-table-cell-role="th">sev_score</th>
+<th data-quarto-table-cell-role="th">drr_score</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">usa_score</th>
+<th data-quarto-table-cell-role="th">w_awr_agr_tot_score</th>
+<th data-quarto-table-cell-role="th">w_awr_che_tot_score</th>
+<th data-quarto-table-cell-role="th">w_awr_con_tot_score</th>
+<th data-quarto-table-cell-role="th">w_awr_elp_tot_score</th>
+<th data-quarto-table-cell-role="th">w_awr_fnb_tot_score</th>
+<th data-quarto-table-cell-role="th">w_awr_min_tot_score</th>
+<th data-quarto-table-cell-role="th">w_awr_ong_tot_score</th>
+<th data-quarto-table-cell-role="th">w_awr_smc_tot_score</th>
+<th data-quarto-table-cell-role="th">w_awr_tex_tot_score</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">89</th>
+<td>111081-ERI.2_1-3365</td>
+<td>89</td>
+<td>Eritrea</td>
+<td>Debub</td>
+<td>6.445810</td>
+<td>4.745978</td>
+<td>4.708000</td>
+<td>3.841307</td>
+<td>3.944071</td>
+<td>2.215140</td>
+<td>...</td>
+<td>5.0</td>
+<td>4.505411</td>
+<td>4.396533</td>
+<td>4.556903</td>
+<td>4.254894</td>
+<td>4.660862</td>
+<td>4.421376</td>
+<td>4.432915</td>
+<td>4.644985</td>
+<td>4.625870</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">90</th>
+<td>111081-ERI.6_1-3365</td>
+<td>90</td>
+<td>Eritrea</td>
+<td>Semenawi Keyih Bahri</td>
+<td>210.189947</td>
+<td>4.745978</td>
+<td>4.708000</td>
+<td>3.841307</td>
+<td>3.944071</td>
+<td>2.215140</td>
+<td>...</td>
+<td>5.0</td>
+<td>4.505411</td>
+<td>4.396533</td>
+<td>4.556903</td>
+<td>4.254894</td>
+<td>4.660862</td>
+<td>4.421376</td>
+<td>4.432915</td>
+<td>4.644985</td>
+<td>4.625870</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">92</th>
+<td>111081-SDN.11_1-1775</td>
+<td>92</td>
+<td>Sudan</td>
+<td>Red Sea</td>
+<td>725.925119</td>
+<td>4.745978</td>
+<td>4.708000</td>
+<td>3.841307</td>
+<td>3.944071</td>
+<td>2.215140</td>
+<td>...</td>
+<td>5.0</td>
+<td>4.341763</td>
+<td>4.286233</td>
+<td>4.365973</td>
+<td>4.230958</td>
+<td>4.410905</td>
+<td>4.309340</td>
+<td>4.314742</td>
+<td>4.483448</td>
+<td>4.459413</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">93</th>
+<td>111081-SDN.11_1-1930</td>
+<td>93</td>
+<td>Sudan</td>
+<td>Red Sea</td>
+<td>345.262750</td>
+<td>4.745978</td>
+<td>4.708000</td>
+<td>3.841307</td>
+<td>3.944071</td>
+<td>2.215140</td>
+<td>...</td>
+<td>5.0</td>
+<td>4.501896</td>
+<td>4.366672</td>
+<td>4.541816</td>
+<td>4.250959</td>
+<td>4.625538</td>
+<td>4.374278</td>
+<td>4.363119</td>
+<td>4.606872</td>
+<td>4.561502</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">94</th>
+<td>111081-SDN.11_1-3365</td>
+<td>94</td>
+<td>Sudan</td>
+<td>Red Sea</td>
+<td>2989.133981</td>
+<td>4.745978</td>
+<td>4.708000</td>
+<td>3.841307</td>
+<td>3.944071</td>
+<td>2.215140</td>
+<td>...</td>
+<td>5.0</td>
+<td>4.501896</td>
+<td>4.366672</td>
+<td>4.541816</td>
+<td>4.250959</td>
+<td>4.625538</td>
+<td>4.374278</td>
+<td>4.363119</td>
+<td>4.606872</td>
+<td>4.561502</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">...</th>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">61195</th>
+<td>832808-CAN.3_1-352</td>
+<td>61194</td>
+<td>Canada</td>
+<td>Manitoba</td>
+<td>1657.645142</td>
+<td>0.000000</td>
+<td>0.001827</td>
+<td>5.000000</td>
+<td>2.576914</td>
+<td>1.512279</td>
+<td>...</td>
+<td>0.0</td>
+<td>1.006019</td>
+<td>0.549238</td>
+<td>0.598137</td>
+<td>0.795594</td>
+<td>0.754779</td>
+<td>0.523294</td>
+<td>0.309699</td>
+<td>0.879260</td>
+<td>0.637502</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">61196</th>
+<td>832808-CAN.8_1-352</td>
+<td>61195</td>
+<td>Canada</td>
+<td>Nunavut</td>
+<td>1468.762076</td>
+<td>0.000000</td>
+<td>0.001827</td>
+<td>5.000000</td>
+<td>2.576914</td>
+<td>1.512279</td>
+<td>...</td>
+<td>0.0</td>
+<td>1.006019</td>
+<td>0.549238</td>
+<td>0.598137</td>
+<td>0.795594</td>
+<td>0.754779</td>
+<td>0.523294</td>
+<td>0.309699</td>
+<td>0.879260</td>
+<td>0.637502</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">61197</th>
+<td>832809-CAN.12_1-352</td>
+<td>61196</td>
+<td>Canada</td>
+<td>Saskatchewan</td>
+<td>174.810225</td>
+<td>0.000000</td>
+<td>0.000025</td>
+<td>3.387390</td>
+<td>0.902210</td>
+<td>1.473108</td>
+<td>...</td>
+<td>0.0</td>
+<td>0.840139</td>
+<td>0.411614</td>
+<td>0.458744</td>
+<td>0.574676</td>
+<td>0.631738</td>
+<td>0.412238</td>
+<td>0.230250</td>
+<td>0.705099</td>
+<td>0.527545</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">61198</th>
+<td>832809-CAN.3_1-352</td>
+<td>61197</td>
+<td>Canada</td>
+<td>Manitoba</td>
+<td>7985.673792</td>
+<td>0.000000</td>
+<td>0.000025</td>
+<td>3.387390</td>
+<td>0.902210</td>
+<td>1.473108</td>
+<td>...</td>
+<td>0.0</td>
+<td>0.840139</td>
+<td>0.411614</td>
+<td>0.458744</td>
+<td>0.574676</td>
+<td>0.631738</td>
+<td>0.412238</td>
+<td>0.230250</td>
+<td>0.705099</td>
+<td>0.527545</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">61199</th>
+<td>832809-CAN.8_1-352</td>
+<td>61198</td>
+<td>Canada</td>
+<td>Nunavut</td>
+<td>191.681814</td>
+<td>0.000000</td>
+<td>0.000025</td>
+<td>3.387390</td>
+<td>0.902210</td>
+<td>1.473108</td>
+<td>...</td>
+<td>0.0</td>
+<td>0.840139</td>
+<td>0.411614</td>
+<td>0.458744</td>
+<td>0.574676</td>
+<td>0.631738</td>
+<td>0.412238</td>
+<td>0.230250</td>
+<td>0.705099</td>
+<td>0.527545</td>
+</tr>
+</tbody>
+</table>
+
+<p>47495 rows × 25 columns</p>
+</div>
+</div>
+</div>
+<div id="87dffd1f" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># contar los valores -9999 por cada columna, y mostrar el porcentaje respecto al total de filas, crear un nuevo dataframe con el resultado, y mostrarlo</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>missing_values_count <span class="op">=</span> df_cleaned.isin([<span class="op">-</span><span class="dv">9999</span>]).<span class="bu">sum</span>()</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>total_rows <span class="op">=</span> <span class="bu">len</span>(df_cleaned)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>missing_values_percentage <span class="op">=</span> (missing_values_count <span class="op">/</span> total_rows) <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>df_missing_values <span class="op">=</span> pd.DataFrame({<span class="st">'Missing Values'</span>: missing_values_count, <span class="st">'Percentage'</span>: missing_values_percentage})</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>df_missing_values[df_missing_values[<span class="st">'Percentage'</span>] <span class="op">&gt;</span> <span class="dv">0</span>].sort_values(by<span class="op">=</span><span class="st">'Percentage'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="31">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Missing Values</th>
+<th data-quarto-table-cell-role="th">Percentage</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">w_awr_smc_tot_score</th>
+<td>726</td>
+<td>1.528582</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">w_awr_fnb_tot_score</th>
+<td>547</td>
+<td>1.151700</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">w_awr_tex_tot_score</th>
+<td>518</td>
+<td>1.090641</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">ucw_score</th>
+<td>497</td>
+<td>1.046426</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">w_awr_agr_tot_score</th>
+<td>363</td>
+<td>0.764291</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">sev_score</th>
+<td>242</td>
+<td>0.509527</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">iav_score</th>
+<td>242</td>
+<td>0.509527</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">w_awr_elp_tot_score</th>
+<td>232</td>
+<td>0.488472</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">bwd_score</th>
+<td>232</td>
+<td>0.488472</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">bws_score</th>
+<td>232</td>
+<td>0.488472</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">w_awr_con_tot_score</th>
+<td>232</td>
+<td>0.488472</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">w_awr_che_tot_score</th>
+<td>192</td>
+<td>0.404253</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">cep_score</th>
+<td>151</td>
+<td>0.317928</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">w_awr_min_tot_score</th>
+<td>21</td>
+<td>0.044215</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">w_awr_ong_tot_score</th>
+<td>3</td>
+<td>0.006316</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="263beac6" class="cell" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>df_cleaned <span class="op">=</span> df_cleaned[df_cleaned[<span class="st">'w_awr_smc_tot_score'</span>] <span class="op">!=</span> <span class="op">-</span><span class="dv">9999</span>]</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># contar los valores -9999 por cada columna, y mostrar el porcentaje respecto al total de filas, crear un nuevo dataframe con el resultado, y mostrarlo</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>missing_values_count <span class="op">=</span> df_cleaned.isin([<span class="op">-</span><span class="dv">9999</span>]).<span class="bu">sum</span>()</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>total_rows <span class="op">=</span> <span class="bu">len</span>(df_cleaned)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>missing_values_percentage <span class="op">=</span> (missing_values_count <span class="op">/</span> total_rows) <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>df_missing_values <span class="op">=</span> pd.DataFrame({<span class="st">'Missing Values'</span>: missing_values_count, <span class="st">'Percentage'</span>: missing_values_percentage})</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>df_missing_values[df_missing_values[<span class="st">'Percentage'</span>] <span class="op">&gt;</span> <span class="dv">0</span>].sort_values(by<span class="op">=</span><span class="st">'Percentage'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="32">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Missing Values</th>
+<th data-quarto-table-cell-role="th">Percentage</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">w_awr_agr_tot_score</th>
+<td>129</td>
+<td>0.275824</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">cep_score</th>
+<td>129</td>
+<td>0.275824</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">sev_score</th>
+<td>10</td>
+<td>0.021382</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">iav_score</th>
+<td>10</td>
+<td>0.021382</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="5414400c" class="cell" data-execution_count="12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>df_cleaned <span class="op">=</span> df_cleaned[df_cleaned[<span class="st">'cep_score'</span>] <span class="op">!=</span> <span class="op">-</span><span class="dv">9999</span>]</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># contar los valores -9999 por cada columna, y mostrar el porcentaje respecto al total de filas, crear un nuevo dataframe con el resultado, y mostrarlo</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>missing_values_count <span class="op">=</span> df_cleaned.isin([<span class="op">-</span><span class="dv">9999</span>]).<span class="bu">sum</span>()</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>total_rows <span class="op">=</span> <span class="bu">len</span>(df_cleaned)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>missing_values_percentage <span class="op">=</span> (missing_values_count <span class="op">/</span> total_rows) <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>df_missing_values <span class="op">=</span> pd.DataFrame({<span class="st">'Missing Values'</span>: missing_values_count, <span class="st">'Percentage'</span>: missing_values_percentage})</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>df_missing_values[df_missing_values[<span class="st">'Percentage'</span>] <span class="op">&gt;</span> <span class="dv">0</span>].sort_values(by<span class="op">=</span><span class="st">'Percentage'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="33">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Missing Values</th>
+<th data-quarto-table-cell-role="th">Percentage</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">iav_score</th>
+<td>10</td>
+<td>0.021441</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">sev_score</th>
+<td>10</td>
+<td>0.021441</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="b2717262" class="cell" data-execution_count="13">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>df_cleaned <span class="op">=</span> df_cleaned[df_cleaned[<span class="st">'iav_score'</span>] <span class="op">!=</span> <span class="op">-</span><span class="dv">9999</span>]</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># contar los valores -9999 por cada columna, y mostrar el porcentaje respecto al total de filas, crear un nuevo dataframe con el resultado, y mostrarlo</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>missing_values_count <span class="op">=</span> df_cleaned.isin([<span class="op">-</span><span class="dv">9999</span>]).<span class="bu">sum</span>()</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>total_rows <span class="op">=</span> <span class="bu">len</span>(df_cleaned)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>missing_values_percentage <span class="op">=</span> (missing_values_count <span class="op">/</span> total_rows) <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>df_missing_values <span class="op">=</span> pd.DataFrame({<span class="st">'Missing Values'</span>: missing_values_count, <span class="st">'Percentage'</span>: missing_values_percentage})</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>df_missing_values[df_missing_values[<span class="st">'Percentage'</span>] <span class="op">&gt;</span> <span class="dv">0</span>].sort_values(by<span class="op">=</span><span class="st">'Percentage'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="34">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Missing Values</th>
+<th data-quarto-table-cell-role="th">Percentage</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="b40a2eb6" class="cell" data-execution_count="14">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>df_cleaned</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="35">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">string_id</th>
+<th data-quarto-table-cell-role="th">aq30_id</th>
+<th data-quarto-table-cell-role="th">name_0</th>
+<th data-quarto-table-cell-role="th">name_1</th>
+<th data-quarto-table-cell-role="th">area_km2</th>
+<th data-quarto-table-cell-role="th">bws_score</th>
+<th data-quarto-table-cell-role="th">bwd_score</th>
+<th data-quarto-table-cell-role="th">iav_score</th>
+<th data-quarto-table-cell-role="th">sev_score</th>
+<th data-quarto-table-cell-role="th">drr_score</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">usa_score</th>
+<th data-quarto-table-cell-role="th">w_awr_agr_tot_score</th>
+<th data-quarto-table-cell-role="th">w_awr_che_tot_score</th>
+<th data-quarto-table-cell-role="th">w_awr_con_tot_score</th>
+<th data-quarto-table-cell-role="th">w_awr_elp_tot_score</th>
+<th data-quarto-table-cell-role="th">w_awr_fnb_tot_score</th>
+<th data-quarto-table-cell-role="th">w_awr_min_tot_score</th>
+<th data-quarto-table-cell-role="th">w_awr_ong_tot_score</th>
+<th data-quarto-table-cell-role="th">w_awr_smc_tot_score</th>
+<th data-quarto-table-cell-role="th">w_awr_tex_tot_score</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">89</th>
+<td>111081-ERI.2_1-3365</td>
+<td>89</td>
+<td>Eritrea</td>
+<td>Debub</td>
+<td>6.445810</td>
+<td>4.745978</td>
+<td>4.708000</td>
+<td>3.841307</td>
+<td>3.944071</td>
+<td>2.215140</td>
+<td>...</td>
+<td>5.0</td>
+<td>4.505411</td>
+<td>4.396533</td>
+<td>4.556903</td>
+<td>4.254894</td>
+<td>4.660862</td>
+<td>4.421376</td>
+<td>4.432915</td>
+<td>4.644985</td>
+<td>4.625870</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">90</th>
+<td>111081-ERI.6_1-3365</td>
+<td>90</td>
+<td>Eritrea</td>
+<td>Semenawi Keyih Bahri</td>
+<td>210.189947</td>
+<td>4.745978</td>
+<td>4.708000</td>
+<td>3.841307</td>
+<td>3.944071</td>
+<td>2.215140</td>
+<td>...</td>
+<td>5.0</td>
+<td>4.505411</td>
+<td>4.396533</td>
+<td>4.556903</td>
+<td>4.254894</td>
+<td>4.660862</td>
+<td>4.421376</td>
+<td>4.432915</td>
+<td>4.644985</td>
+<td>4.625870</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">92</th>
+<td>111081-SDN.11_1-1775</td>
+<td>92</td>
+<td>Sudan</td>
+<td>Red Sea</td>
+<td>725.925119</td>
+<td>4.745978</td>
+<td>4.708000</td>
+<td>3.841307</td>
+<td>3.944071</td>
+<td>2.215140</td>
+<td>...</td>
+<td>5.0</td>
+<td>4.341763</td>
+<td>4.286233</td>
+<td>4.365973</td>
+<td>4.230958</td>
+<td>4.410905</td>
+<td>4.309340</td>
+<td>4.314742</td>
+<td>4.483448</td>
+<td>4.459413</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">93</th>
+<td>111081-SDN.11_1-1930</td>
+<td>93</td>
+<td>Sudan</td>
+<td>Red Sea</td>
+<td>345.262750</td>
+<td>4.745978</td>
+<td>4.708000</td>
+<td>3.841307</td>
+<td>3.944071</td>
+<td>2.215140</td>
+<td>...</td>
+<td>5.0</td>
+<td>4.501896</td>
+<td>4.366672</td>
+<td>4.541816</td>
+<td>4.250959</td>
+<td>4.625538</td>
+<td>4.374278</td>
+<td>4.363119</td>
+<td>4.606872</td>
+<td>4.561502</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">94</th>
+<td>111081-SDN.11_1-3365</td>
+<td>94</td>
+<td>Sudan</td>
+<td>Red Sea</td>
+<td>2989.133981</td>
+<td>4.745978</td>
+<td>4.708000</td>
+<td>3.841307</td>
+<td>3.944071</td>
+<td>2.215140</td>
+<td>...</td>
+<td>5.0</td>
+<td>4.501896</td>
+<td>4.366672</td>
+<td>4.541816</td>
+<td>4.250959</td>
+<td>4.625538</td>
+<td>4.374278</td>
+<td>4.363119</td>
+<td>4.606872</td>
+<td>4.561502</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">...</th>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">61195</th>
+<td>832808-CAN.3_1-352</td>
+<td>61194</td>
+<td>Canada</td>
+<td>Manitoba</td>
+<td>1657.645142</td>
+<td>0.000000</td>
+<td>0.001827</td>
+<td>5.000000</td>
+<td>2.576914</td>
+<td>1.512279</td>
+<td>...</td>
+<td>0.0</td>
+<td>1.006019</td>
+<td>0.549238</td>
+<td>0.598137</td>
+<td>0.795594</td>
+<td>0.754779</td>
+<td>0.523294</td>
+<td>0.309699</td>
+<td>0.879260</td>
+<td>0.637502</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">61196</th>
+<td>832808-CAN.8_1-352</td>
+<td>61195</td>
+<td>Canada</td>
+<td>Nunavut</td>
+<td>1468.762076</td>
+<td>0.000000</td>
+<td>0.001827</td>
+<td>5.000000</td>
+<td>2.576914</td>
+<td>1.512279</td>
+<td>...</td>
+<td>0.0</td>
+<td>1.006019</td>
+<td>0.549238</td>
+<td>0.598137</td>
+<td>0.795594</td>
+<td>0.754779</td>
+<td>0.523294</td>
+<td>0.309699</td>
+<td>0.879260</td>
+<td>0.637502</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">61197</th>
+<td>832809-CAN.12_1-352</td>
+<td>61196</td>
+<td>Canada</td>
+<td>Saskatchewan</td>
+<td>174.810225</td>
+<td>0.000000</td>
+<td>0.000025</td>
+<td>3.387390</td>
+<td>0.902210</td>
+<td>1.473108</td>
+<td>...</td>
+<td>0.0</td>
+<td>0.840139</td>
+<td>0.411614</td>
+<td>0.458744</td>
+<td>0.574676</td>
+<td>0.631738</td>
+<td>0.412238</td>
+<td>0.230250</td>
+<td>0.705099</td>
+<td>0.527545</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">61198</th>
+<td>832809-CAN.3_1-352</td>
+<td>61197</td>
+<td>Canada</td>
+<td>Manitoba</td>
+<td>7985.673792</td>
+<td>0.000000</td>
+<td>0.000025</td>
+<td>3.387390</td>
+<td>0.902210</td>
+<td>1.473108</td>
+<td>...</td>
+<td>0.0</td>
+<td>0.840139</td>
+<td>0.411614</td>
+<td>0.458744</td>
+<td>0.574676</td>
+<td>0.631738</td>
+<td>0.412238</td>
+<td>0.230250</td>
+<td>0.705099</td>
+<td>0.527545</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">61199</th>
+<td>832809-CAN.8_1-352</td>
+<td>61198</td>
+<td>Canada</td>
+<td>Nunavut</td>
+<td>191.681814</td>
+<td>0.000000</td>
+<td>0.000025</td>
+<td>3.387390</td>
+<td>0.902210</td>
+<td>1.473108</td>
+<td>...</td>
+<td>0.0</td>
+<td>0.840139</td>
+<td>0.411614</td>
+<td>0.458744</td>
+<td>0.574676</td>
+<td>0.631738</td>
+<td>0.412238</td>
+<td>0.230250</td>
+<td>0.705099</td>
+<td>0.527545</td>
+</tr>
+</tbody>
+</table>
+
+<p>46630 rows × 25 columns</p>
+</div>
+</div>
+</div>
+</section>
+<section id="data-augmentation" class="level2">
+<h2 class="anchored" data-anchor-id="data-augmentation"><strong>Data augmentation</strong></h2>
+<blockquote class="blockquote">
+<p>clasificar los paises por regiones</p>
+</blockquote>
+<div id="cff5b354" class="cell" data-execution_count="15">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>africa <span class="op">=</span> [</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Egypt'</span>,<span class="st">'Sudan'</span>,<span class="st">'Eritrea'</span>,<span class="st">'Somalia'</span>,<span class="st">'Ethiopia'</span>,<span class="st">'Djibouti'</span>,</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Kenya'</span>,<span class="st">'Tanzania'</span>,<span class="st">'Uganda'</span>,<span class="st">'South Sudan'</span>,<span class="st">'Zambia'</span>,<span class="st">'Mozambique'</span>,</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Malawi'</span>,<span class="st">'Zimbabwe'</span>,<span class="st">'Democratic Republic of the Congo'</span>,<span class="st">'Botswana'</span>,</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Namibia'</span>,<span class="st">'Angola'</span>,<span class="st">'South Africa'</span>,<span class="st">'Swaziland'</span>,<span class="st">'Lesotho'</span>,</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Republic of Congo'</span>,<span class="st">'Gabon'</span>,<span class="st">'Central African Republic'</span>,<span class="st">'Cameroon'</span>,</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Burundi'</span>,<span class="st">'Rwanda'</span>,<span class="st">'Equatorial Guinea'</span>,<span class="st">'Nigeria'</span>,</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">'São Tomé and Príncipe'</span>,<span class="st">'Chad'</span>,<span class="st">'Benin'</span>,<span class="st">'Niger'</span>,<span class="st">'Mali'</span>,</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Algeria'</span>,<span class="st">'Burkina Faso'</span>,<span class="st">'Mauritania'</span>,<span class="st">"Côte d'Ivoire"</span>,</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Guinea'</span>,<span class="st">'Sierra Leone'</span>,<span class="st">'Togo'</span>,<span class="st">'Ghana'</span>,<span class="st">'Liberia'</span>,<span class="st">'Guinea-Bissau'</span>,</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Senegal'</span>,<span class="st">'Gambia'</span>,<span class="st">'Western Sahara'</span>,<span class="st">'Morocco'</span>,<span class="st">'Tunisia'</span>,<span class="st">'Libya'</span>,</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Madagascar'</span>,<span class="st">'Comoros'</span>,<span class="st">'Seychelles'</span>,<span class="st">'Cape Verde'</span>,<span class="st">'Mauritius'</span>,</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Reunion'</span>,<span class="st">'Mayotte'</span>,<span class="st">'Saint Helena'</span>,<span class="st">'French Southern Territories'</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>europe <span class="op">=</span> [</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Spain'</span>,<span class="st">'Portugal'</span>,<span class="st">'Italy'</span>,<span class="st">'Greece'</span>,<span class="st">'Bulgaria'</span>,<span class="st">'Macedonia'</span>,</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Serbia'</span>,<span class="st">'Kosovo'</span>,<span class="st">'Albania'</span>,<span class="st">'Montenegro'</span>,</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Bosnia and Herzegovina'</span>,<span class="st">'Croatia'</span>,<span class="st">'Slovenia'</span>,<span class="st">'Austria'</span>,</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Switzerland'</span>,<span class="st">'France'</span>,<span class="st">'San Marino'</span>,<span class="st">'Andorra'</span>,<span class="st">'Malta'</span>,</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Germany'</span>,<span class="st">'Belgium'</span>,<span class="st">'Netherlands'</span>,<span class="st">'Luxembourg'</span>,<span class="st">'Liechtenstein'</span>,</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>    <span class="st">'United Kingdom'</span>,<span class="st">'Ireland'</span>,<span class="st">'Denmark'</span>,<span class="st">'Lithuania'</span>,<span class="st">'Latvia'</span>,</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Estonia'</span>,<span class="st">'Finland'</span>,<span class="st">'Norway'</span>,<span class="st">'Sweden'</span>,<span class="st">'Iceland'</span>,<span class="st">'Poland'</span>,</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Romania'</span>,<span class="st">'Hungary'</span>,<span class="st">'Slovakia'</span>,<span class="st">'Czech Republic'</span>,<span class="st">'Ukraine'</span>,</span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Belarus'</span>,<span class="st">'Moldova'</span>,<span class="st">'Russia'</span>,<span class="st">'Georgia'</span>,</span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Guernsey'</span>,<span class="st">'Jersey'</span>,<span class="st">'Isle of Man'</span>,<span class="st">'Faroe Islands'</span>,<span class="st">'Åland'</span>,</span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Svalbard and Jan Mayen'</span></span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a>asia <span class="op">=</span> [</span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Yemen'</span>,<span class="st">'Israel'</span>,<span class="st">'Palestina'</span>,<span class="st">'Lebanon'</span>,<span class="st">'Syria'</span>,<span class="st">'Turkey'</span>,<span class="st">'Cyprus'</span>,</span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Iran'</span>,<span class="st">'Afghanistan'</span>,<span class="st">'Iraq'</span>,<span class="st">'Azerbaijan'</span>,<span class="st">'Armenia'</span>,<span class="st">'Pakistan'</span>,</span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Saudi Arabia'</span>,<span class="st">'Jordan'</span>,<span class="st">'Kuwait'</span>,<span class="st">'Bahrain'</span>,<span class="st">'Qatar'</span>,</span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a>    <span class="st">'United Arab Emirates'</span>,<span class="st">'Oman'</span>,<span class="st">'China'</span>,<span class="st">'Mongolia'</span>,<span class="st">'Japan'</span>,</span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a>    <span class="st">'North Korea'</span>,<span class="st">'South Korea'</span>,<span class="st">'Taiwan'</span>,<span class="st">'Hong Kong'</span>,<span class="st">'Macao'</span>,</span>
+<span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Vietnam'</span>,<span class="st">'Laos'</span>,<span class="st">'Cambodia'</span>,<span class="st">'Thailand'</span>,<span class="st">'Myanmar'</span>,<span class="st">'Malaysia'</span>,</span>
+<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Singapore'</span>,<span class="st">'India'</span>,<span class="st">'Bangladesh'</span>,<span class="st">'Nepal'</span>,<span class="st">'Bhutan'</span>,<span class="st">'Sri Lanka'</span>,</span>
+<span id="cb17-38"><a href="#cb17-38" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Tajikistan'</span>,<span class="st">'Kyrgyzstan'</span>,<span class="st">'Indonesia'</span>,<span class="st">'Timor-Leste'</span>,<span class="st">'Brunei'</span>,</span>
+<span id="cb17-39"><a href="#cb17-39" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Philippines'</span>,<span class="st">'Kazakhstan'</span>,<span class="st">'Uzbekistan'</span>,<span class="st">'Turkmenistan'</span>,</span>
+<span id="cb17-40"><a href="#cb17-40" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Akrotiri and Dhekelia'</span>,<span class="st">'Northern Cyprus'</span></span>
+<span id="cb17-41"><a href="#cb17-41" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb17-42"><a href="#cb17-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-43"><a href="#cb17-43" aria-hidden="true" tabindex="-1"></a>north_america <span class="op">=</span> [</span>
+<span id="cb17-44"><a href="#cb17-44" aria-hidden="true" tabindex="-1"></a>    <span class="st">'United States'</span>,<span class="st">'Canada'</span>,<span class="st">'Mexico'</span>,<span class="st">'Greenland'</span>,</span>
+<span id="cb17-45"><a href="#cb17-45" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Bermuda'</span>,<span class="st">'Saint Pierre and Miquelon'</span></span>
+<span id="cb17-46"><a href="#cb17-46" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb17-47"><a href="#cb17-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-48"><a href="#cb17-48" aria-hidden="true" tabindex="-1"></a>central_america <span class="op">=</span> [</span>
+<span id="cb17-49"><a href="#cb17-49" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Guatemala'</span>,<span class="st">'Belize'</span>,<span class="st">'Honduras'</span>,<span class="st">'Nicaragua'</span>,</span>
+<span id="cb17-50"><a href="#cb17-50" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Costa Rica'</span>,<span class="st">'Panama'</span>,<span class="st">'El Salvador'</span></span>
+<span id="cb17-51"><a href="#cb17-51" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb17-52"><a href="#cb17-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-53"><a href="#cb17-53" aria-hidden="true" tabindex="-1"></a>caribbean <span class="op">=</span> [</span>
+<span id="cb17-54"><a href="#cb17-54" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Bahamas'</span>,<span class="st">'Cuba'</span>,<span class="st">'Jamaica'</span>,<span class="st">'Haiti'</span>,<span class="st">'Dominican Republic'</span>,</span>
+<span id="cb17-55"><a href="#cb17-55" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Barbados'</span>,<span class="st">'Trinidad and Tobago'</span>,<span class="st">'Puerto Rico'</span>,</span>
+<span id="cb17-56"><a href="#cb17-56" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Bonaire, Sint Eustatius and Saba'</span>,<span class="st">'Grenada'</span>,<span class="st">'Saint Lucia'</span>,</span>
+<span id="cb17-57"><a href="#cb17-57" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Martinique'</span>,<span class="st">'Saint Vincent and the Grenadines'</span>,</span>
+<span id="cb17-58"><a href="#cb17-58" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Turks and Caicos Islands'</span>,<span class="st">'Cayman Islands'</span>,</span>
+<span id="cb17-59"><a href="#cb17-59" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Antigua and Barbuda'</span>,<span class="st">'Dominica'</span>,<span class="st">'Guadeloupe'</span>,</span>
+<span id="cb17-60"><a href="#cb17-60" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Saint Kitts and Nevis'</span>,<span class="st">'Montserrat'</span>,</span>
+<span id="cb17-61"><a href="#cb17-61" aria-hidden="true" tabindex="-1"></a>    <span class="st">'British Virgin Islands'</span>,<span class="st">'Virgin Islands, U.S.'</span></span>
+<span id="cb17-62"><a href="#cb17-62" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb17-63"><a href="#cb17-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-64"><a href="#cb17-64" aria-hidden="true" tabindex="-1"></a>south_america <span class="op">=</span> [</span>
+<span id="cb17-65"><a href="#cb17-65" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Colombia'</span>,<span class="st">'Venezuela'</span>,<span class="st">'Brazil'</span>,<span class="st">'Guyana'</span>,<span class="st">'Suriname'</span>,</span>
+<span id="cb17-66"><a href="#cb17-66" aria-hidden="true" tabindex="-1"></a>    <span class="st">'French Guiana'</span>,<span class="st">'Bolivia'</span>,<span class="st">'Peru'</span>,<span class="st">'Ecuador'</span>,<span class="st">'Uruguay'</span>,</span>
+<span id="cb17-67"><a href="#cb17-67" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Argentina'</span>,<span class="st">'Paraguay'</span>,<span class="st">'Chile'</span></span>
+<span id="cb17-68"><a href="#cb17-68" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb17-69"><a href="#cb17-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-70"><a href="#cb17-70" aria-hidden="true" tabindex="-1"></a>oceania <span class="op">=</span> [</span>
+<span id="cb17-71"><a href="#cb17-71" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Australia'</span>,<span class="st">'New Zealand'</span>,<span class="st">'Papua New Guinea'</span>,<span class="st">'Fiji'</span>,</span>
+<span id="cb17-72"><a href="#cb17-72" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Solomon Islands'</span>,<span class="st">'Vanuatu'</span>,<span class="st">'Samoa'</span>,<span class="st">'Tonga'</span>,<span class="st">'Tuvalu'</span>,</span>
+<span id="cb17-73"><a href="#cb17-73" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Micronesia'</span>,<span class="st">'Palau'</span>,<span class="st">'Nauru'</span>,<span class="st">'New Caledonia'</span>,</span>
+<span id="cb17-74"><a href="#cb17-74" aria-hidden="true" tabindex="-1"></a>    <span class="st">'French Polynesia'</span>,<span class="st">'Wallis and Futuna'</span>,<span class="st">'Tokelau'</span>,</span>
+<span id="cb17-75"><a href="#cb17-75" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Guam'</span>,<span class="st">'Northern Mariana Islands'</span>,</span>
+<span id="cb17-76"><a href="#cb17-76" aria-hidden="true" tabindex="-1"></a>    <span class="st">'United States Minor Outlying Islands'</span>,<span class="st">'American Samoa'</span></span>
+<span id="cb17-77"><a href="#cb17-77" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb17-78"><a href="#cb17-78" aria-hidden="true" tabindex="-1"></a>continent_map <span class="op">=</span> {}</span>
+<span id="cb17-79"><a href="#cb17-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-80"><a href="#cb17-80" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> c <span class="kw">in</span> africa:</span>
+<span id="cb17-81"><a href="#cb17-81" aria-hidden="true" tabindex="-1"></a>    continent_map[c] <span class="op">=</span> <span class="st">'Africa'</span></span>
+<span id="cb17-82"><a href="#cb17-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-83"><a href="#cb17-83" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> c <span class="kw">in</span> europe:</span>
+<span id="cb17-84"><a href="#cb17-84" aria-hidden="true" tabindex="-1"></a>    continent_map[c] <span class="op">=</span> <span class="st">'Europe'</span></span>
+<span id="cb17-85"><a href="#cb17-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-86"><a href="#cb17-86" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> c <span class="kw">in</span> asia:</span>
+<span id="cb17-87"><a href="#cb17-87" aria-hidden="true" tabindex="-1"></a>    continent_map[c] <span class="op">=</span> <span class="st">'Asia'</span></span>
+<span id="cb17-88"><a href="#cb17-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-89"><a href="#cb17-89" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> c <span class="kw">in</span> north_america:</span>
+<span id="cb17-90"><a href="#cb17-90" aria-hidden="true" tabindex="-1"></a>    continent_map[c] <span class="op">=</span> <span class="st">'North America'</span></span>
+<span id="cb17-91"><a href="#cb17-91" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> c <span class="kw">in</span> central_america:</span>
+<span id="cb17-92"><a href="#cb17-92" aria-hidden="true" tabindex="-1"></a>    continent_map[c] <span class="op">=</span> <span class="st">'Central America'</span></span>
+<span id="cb17-93"><a href="#cb17-93" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> c <span class="kw">in</span> caribbean:</span>
+<span id="cb17-94"><a href="#cb17-94" aria-hidden="true" tabindex="-1"></a>    continent_map[c] <span class="op">=</span> <span class="st">'Caribbean'</span></span>
+<span id="cb17-95"><a href="#cb17-95" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> c <span class="kw">in</span> south_america:</span>
+<span id="cb17-96"><a href="#cb17-96" aria-hidden="true" tabindex="-1"></a>    continent_map[c] <span class="op">=</span> <span class="st">'South America'</span></span>
+<span id="cb17-97"><a href="#cb17-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-98"><a href="#cb17-98" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> c <span class="kw">in</span> oceania:</span>
+<span id="cb17-99"><a href="#cb17-99" aria-hidden="true" tabindex="-1"></a>    continent_map[c] <span class="op">=</span> <span class="st">'Oceania'</span></span>
+<span id="cb17-100"><a href="#cb17-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-101"><a href="#cb17-101" aria-hidden="true" tabindex="-1"></a>df_cleaned[<span class="st">'continent'</span>] <span class="op">=</span> df_cleaned[<span class="st">'name_0'</span>].<span class="bu">map</span>(continent_map)</span>
+<span id="cb17-102"><a href="#cb17-102" aria-hidden="true" tabindex="-1"></a>df_cleaned.groupby(<span class="st">'continent'</span>)[<span class="st">'name_0'</span>].count()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="36">
+<pre><code>continent
+Africa              9784
+Asia               12379
+Caribbean            330
+Central America      736
+Europe              8925
+North America       6008
+Oceania             2152
+South America       6316
+Name: name_0, dtype: int64</code></pre>
+</div>
+</div>
+<div id="936f854c" class="cell" data-execution_count="16">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>df_cleaned[df_cleaned[<span class="st">'continent'</span>].isna()][<span class="st">'name_0'</span>].unique()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="37">
+<pre><code>&lt;StringArray&gt;
+[]
+Length: 0, dtype: str</code></pre>
+</div>
+</div>
+<div id="1d9352d3" class="cell" data-execution_count="17">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Creación de Macro-indicadores</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>df_cleaned[<span class="st">'Riesgo_Hidrologico_total'</span>] <span class="op">=</span> df_cleaned[riesgo_hidrologico].mean(axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>df_cleaned[<span class="st">'Riesgo_Eventos_total'</span>] <span class="op">=</span> df_cleaned[eventos_hidrologicos].mean(axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>df_cleaned[<span class="st">'Riesgo_Calidad_Agua_total'</span>] <span class="op">=</span> df_cleaned[calidad_agua].mean(axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>df_cleaned[<span class="st">'Riesgo_por_Industria_total'</span>] <span class="op">=</span> df_cleaned[por_industria].mean(axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>df_cleaned[df_cleaned[<span class="st">'continent'</span>] <span class="op">==</span> <span class="st">'Africa'</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="38">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">string_id</th>
+<th data-quarto-table-cell-role="th">aq30_id</th>
+<th data-quarto-table-cell-role="th">name_0</th>
+<th data-quarto-table-cell-role="th">name_1</th>
+<th data-quarto-table-cell-role="th">area_km2</th>
+<th data-quarto-table-cell-role="th">bws_score</th>
+<th data-quarto-table-cell-role="th">bwd_score</th>
+<th data-quarto-table-cell-role="th">iav_score</th>
+<th data-quarto-table-cell-role="th">sev_score</th>
+<th data-quarto-table-cell-role="th">drr_score</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">w_awr_fnb_tot_score</th>
+<th data-quarto-table-cell-role="th">w_awr_min_tot_score</th>
+<th data-quarto-table-cell-role="th">w_awr_ong_tot_score</th>
+<th data-quarto-table-cell-role="th">w_awr_smc_tot_score</th>
+<th data-quarto-table-cell-role="th">w_awr_tex_tot_score</th>
+<th data-quarto-table-cell-role="th">continent</th>
+<th data-quarto-table-cell-role="th">Riesgo_Hidrologico_total</th>
+<th data-quarto-table-cell-role="th">Riesgo_Eventos_total</th>
+<th data-quarto-table-cell-role="th">Riesgo_Calidad_Agua_total</th>
+<th data-quarto-table-cell-role="th">Riesgo_por_Industria_total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">89</th>
+<td>111081-ERI.2_1-3365</td>
+<td>89</td>
+<td>Eritrea</td>
+<td>Debub</td>
+<td>6.445810</td>
+<td>4.745978</td>
+<td>4.708000</td>
+<td>3.841307</td>
+<td>3.944071</td>
+<td>2.215140</td>
+<td>...</td>
+<td>4.660862</td>
+<td>4.421376</td>
+<td>4.432915</td>
+<td>4.644985</td>
+<td>4.625870</td>
+<td>Africa</td>
+<td>3.890899</td>
+<td>2.131406</td>
+<td>4.412566</td>
+<td>4.499972</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">90</th>
+<td>111081-ERI.6_1-3365</td>
+<td>90</td>
+<td>Eritrea</td>
+<td>Semenawi Keyih Bahri</td>
+<td>210.189947</td>
+<td>4.745978</td>
+<td>4.708000</td>
+<td>3.841307</td>
+<td>3.944071</td>
+<td>2.215140</td>
+<td>...</td>
+<td>4.660862</td>
+<td>4.421376</td>
+<td>4.432915</td>
+<td>4.644985</td>
+<td>4.625870</td>
+<td>Africa</td>
+<td>3.890899</td>
+<td>2.131406</td>
+<td>4.412566</td>
+<td>4.499972</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">92</th>
+<td>111081-SDN.11_1-1775</td>
+<td>92</td>
+<td>Sudan</td>
+<td>Red Sea</td>
+<td>725.925119</td>
+<td>4.745978</td>
+<td>4.708000</td>
+<td>3.841307</td>
+<td>3.944071</td>
+<td>2.215140</td>
+<td>...</td>
+<td>4.410905</td>
+<td>4.309340</td>
+<td>4.314742</td>
+<td>4.483448</td>
+<td>4.459413</td>
+<td>Africa</td>
+<td>3.890899</td>
+<td>2.131406</td>
+<td>4.412566</td>
+<td>4.355864</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">93</th>
+<td>111081-SDN.11_1-1930</td>
+<td>93</td>
+<td>Sudan</td>
+<td>Red Sea</td>
+<td>345.262750</td>
+<td>4.745978</td>
+<td>4.708000</td>
+<td>3.841307</td>
+<td>3.944071</td>
+<td>2.215140</td>
+<td>...</td>
+<td>4.625538</td>
+<td>4.374278</td>
+<td>4.363119</td>
+<td>4.606872</td>
+<td>4.561502</td>
+<td>Africa</td>
+<td>3.890899</td>
+<td>2.131406</td>
+<td>4.412566</td>
+<td>4.465850</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">94</th>
+<td>111081-SDN.11_1-3365</td>
+<td>94</td>
+<td>Sudan</td>
+<td>Red Sea</td>
+<td>2989.133981</td>
+<td>4.745978</td>
+<td>4.708000</td>
+<td>3.841307</td>
+<td>3.944071</td>
+<td>2.215140</td>
+<td>...</td>
+<td>4.625538</td>
+<td>4.374278</td>
+<td>4.363119</td>
+<td>4.606872</td>
+<td>4.561502</td>
+<td>Africa</td>
+<td>3.890899</td>
+<td>2.131406</td>
+<td>4.412566</td>
+<td>4.465850</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">...</th>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">13630</th>
+<td>181997-MDG.6_1-2873</td>
+<td>13630</td>
+<td>Madagascar</td>
+<td>Toliary</td>
+<td>2472.519098</td>
+<td>0.000000</td>
+<td>0.338593</td>
+<td>3.411136</td>
+<td>1.104046</td>
+<td>2.618641</td>
+<td>...</td>
+<td>2.794729</td>
+<td>4.016191</td>
+<td>4.133628</td>
+<td>3.882148</td>
+<td>4.092742</td>
+<td>Africa</td>
+<td>1.494483</td>
+<td>1.377015</td>
+<td>3.998695</td>
+<td>3.304356</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">13631</th>
+<td>181997-MDG.6_1-None</td>
+<td>13631</td>
+<td>Madagascar</td>
+<td>Toliary</td>
+<td>84.238556</td>
+<td>0.000000</td>
+<td>0.338593</td>
+<td>3.411136</td>
+<td>1.104046</td>
+<td>2.618641</td>
+<td>...</td>
+<td>2.794729</td>
+<td>4.016191</td>
+<td>4.133628</td>
+<td>3.882148</td>
+<td>4.092742</td>
+<td>Africa</td>
+<td>1.494483</td>
+<td>1.377015</td>
+<td>3.998695</td>
+<td>3.304356</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">13633</th>
+<td>181998-MDG.6_1-2838</td>
+<td>13633</td>
+<td>Madagascar</td>
+<td>Toliary</td>
+<td>2293.529468</td>
+<td>0.000000</td>
+<td>0.048019</td>
+<td>4.199191</td>
+<td>1.520179</td>
+<td>2.575496</td>
+<td>...</td>
+<td>2.820776</td>
+<td>4.079396</td>
+<td>4.160724</td>
+<td>4.006862</td>
+<td>4.119364</td>
+<td>Africa</td>
+<td>1.668577</td>
+<td>1.884225</td>
+<td>3.999557</td>
+<td>3.417941</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">13634</th>
+<td>181998-MDG.6_1-2873</td>
+<td>13634</td>
+<td>Madagascar</td>
+<td>Toliary</td>
+<td>2917.606420</td>
+<td>0.000000</td>
+<td>0.048019</td>
+<td>4.199191</td>
+<td>1.520179</td>
+<td>2.575496</td>
+<td>...</td>
+<td>2.820776</td>
+<td>4.079396</td>
+<td>4.160724</td>
+<td>4.006862</td>
+<td>4.119364</td>
+<td>Africa</td>
+<td>1.668577</td>
+<td>1.884225</td>
+<td>3.999557</td>
+<td>3.417941</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">13635</th>
+<td>181998-MDG.6_1-None</td>
+<td>13635</td>
+<td>Madagascar</td>
+<td>Toliary</td>
+<td>0.237917</td>
+<td>0.000000</td>
+<td>0.048019</td>
+<td>4.199191</td>
+<td>1.520179</td>
+<td>2.575496</td>
+<td>...</td>
+<td>2.820776</td>
+<td>4.079396</td>
+<td>4.160724</td>
+<td>4.006862</td>
+<td>4.119364</td>
+<td>Africa</td>
+<td>1.668577</td>
+<td>1.884225</td>
+<td>3.999557</td>
+<td>3.417941</td>
+</tr>
+</tbody>
+</table>
+
+<p>9784 rows × 30 columns</p>
+</div>
+</div>
+</div>
+<div id="ceff73f8" class="cell" data-execution_count="18">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>os.makedirs(<span class="st">"data"</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>df_cleaned.to_csv(<span class="st">"data/cleaned_data.csv"</span>, index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co"># si se guardo el archivo, mostrar un mensaje de confirmacion</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> os.path.exists(<span class="st">"data/cleaned_data.csv"</span>):</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Archivo guardado exitosamente en data/cleaned_data.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Archivo guardado exitosamente en data/cleaned_data.csv</code></pre>
+</div>
+</div>
+</section>
+<section id="data-transformation-restructuring" class="level2">
+<h2 class="anchored" data-anchor-id="data-transformation-restructuring"><strong>Data Transformation: Restructuring</strong></h2>
+<blockquote class="blockquote">
+<p>Pasar de wide format a long format para facilitar la visualizacion de las variables</p>
+</blockquote>
+<div id="8410f20c" class="cell" data-execution_count="19">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>totales <span class="op">=</span> [<span class="st">'Riesgo_Hidrologico_total'</span>, <span class="st">'Riesgo_Eventos_total'</span>, <span class="st">'Riesgo_Calidad_Agua_total'</span>, <span class="st">'Riesgo_por_Industria_total'</span>]</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Diccionario score -&gt; categoria</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>mapa_categorias <span class="op">=</span> {}</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> col <span class="kw">in</span> riesgo_hidrologico:</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    mapa_categorias[col] <span class="op">=</span> <span class="st">"riesgo_hidrologico"</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> col <span class="kw">in</span> eventos_hidrologicos:</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>    mapa_categorias[col] <span class="op">=</span> <span class="st">"eventos_hidrologicos"</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> col <span class="kw">in</span> calidad_agua:</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>    mapa_categorias[col] <span class="op">=</span> <span class="st">"calidad_agua"</span></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> col <span class="kw">in</span> por_industria:</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>    mapa_categorias[col] <span class="op">=</span> <span class="st">"por_industria"</span></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> col <span class="kw">in</span> totales:</span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>    mapa_categorias[col] <span class="op">=</span> <span class="st">"total"</span></span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Todas las columnas score</span></span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>score_cols <span class="op">=</span> <span class="bu">list</span>(mapa_categorias.keys())</span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Supongamos que tu dataframe original se llama df_cleaned</span></span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Aquí se conservan las demás columnas que NO son scores</span></span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a>id_cols <span class="op">=</span> [col <span class="cf">for</span> col <span class="kw">in</span> df_cleaned.columns <span class="cf">if</span> col <span class="kw">not</span> <span class="kw">in</span> score_cols]</span>
+<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Pasar a formato largo</span></span>
+<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a>df_long <span class="op">=</span> df_cleaned.melt(</span>
+<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a>    id_vars<span class="op">=</span>id_cols,</span>
+<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a>    value_vars<span class="op">=</span>score_cols,</span>
+<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a>    var_name<span class="op">=</span><span class="st">"score"</span>,</span>
+<span id="cb24-32"><a href="#cb24-32" aria-hidden="true" tabindex="-1"></a>    value_name<span class="op">=</span><span class="st">"value"</span></span>
+<span id="cb24-33"><a href="#cb24-33" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb24-34"><a href="#cb24-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-35"><a href="#cb24-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Agregar la categoría</span></span>
+<span id="cb24-36"><a href="#cb24-36" aria-hidden="true" tabindex="-1"></a>df_long[<span class="st">"category"</span>] <span class="op">=</span> df_long[<span class="st">"score"</span>].<span class="bu">map</span>(mapa_categorias)</span>
+<span id="cb24-37"><a href="#cb24-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-38"><a href="#cb24-38" aria-hidden="true" tabindex="-1"></a>df_long</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="40">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">string_id</th>
+<th data-quarto-table-cell-role="th">aq30_id</th>
+<th data-quarto-table-cell-role="th">name_0</th>
+<th data-quarto-table-cell-role="th">name_1</th>
+<th data-quarto-table-cell-role="th">area_km2</th>
+<th data-quarto-table-cell-role="th">continent</th>
+<th data-quarto-table-cell-role="th">score</th>
+<th data-quarto-table-cell-role="th">value</th>
+<th data-quarto-table-cell-role="th">category</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>111081-ERI.2_1-3365</td>
+<td>89</td>
+<td>Eritrea</td>
+<td>Debub</td>
+<td>6.445810</td>
+<td>Africa</td>
+<td>bws_score</td>
+<td>4.745978</td>
+<td>riesgo_hidrologico</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>111081-ERI.6_1-3365</td>
+<td>90</td>
+<td>Eritrea</td>
+<td>Semenawi Keyih Bahri</td>
+<td>210.189947</td>
+<td>Africa</td>
+<td>bws_score</td>
+<td>4.745978</td>
+<td>riesgo_hidrologico</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>111081-SDN.11_1-1775</td>
+<td>92</td>
+<td>Sudan</td>
+<td>Red Sea</td>
+<td>725.925119</td>
+<td>Africa</td>
+<td>bws_score</td>
+<td>4.745978</td>
+<td>riesgo_hidrologico</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>111081-SDN.11_1-1930</td>
+<td>93</td>
+<td>Sudan</td>
+<td>Red Sea</td>
+<td>345.262750</td>
+<td>Africa</td>
+<td>bws_score</td>
+<td>4.745978</td>
+<td>riesgo_hidrologico</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>111081-SDN.11_1-3365</td>
+<td>94</td>
+<td>Sudan</td>
+<td>Red Sea</td>
+<td>2989.133981</td>
+<td>Africa</td>
+<td>bws_score</td>
+<td>4.745978</td>
+<td>riesgo_hidrologico</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">...</th>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">1119115</th>
+<td>832808-CAN.3_1-352</td>
+<td>61194</td>
+<td>Canada</td>
+<td>Manitoba</td>
+<td>1657.645142</td>
+<td>North America</td>
+<td>Riesgo_por_Industria_total</td>
+<td>0.672614</td>
+<td>total</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1119116</th>
+<td>832808-CAN.8_1-352</td>
+<td>61195</td>
+<td>Canada</td>
+<td>Nunavut</td>
+<td>1468.762076</td>
+<td>North America</td>
+<td>Riesgo_por_Industria_total</td>
+<td>0.672614</td>
+<td>total</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">1119117</th>
+<td>832809-CAN.12_1-352</td>
+<td>61196</td>
+<td>Canada</td>
+<td>Saskatchewan</td>
+<td>174.810225</td>
+<td>North America</td>
+<td>Riesgo_por_Industria_total</td>
+<td>0.532449</td>
+<td>total</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1119118</th>
+<td>832809-CAN.3_1-352</td>
+<td>61197</td>
+<td>Canada</td>
+<td>Manitoba</td>
+<td>7985.673792</td>
+<td>North America</td>
+<td>Riesgo_por_Industria_total</td>
+<td>0.532449</td>
+<td>total</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">1119119</th>
+<td>832809-CAN.8_1-352</td>
+<td>61198</td>
+<td>Canada</td>
+<td>Nunavut</td>
+<td>191.681814</td>
+<td>North America</td>
+<td>Riesgo_por_Industria_total</td>
+<td>0.532449</td>
+<td>total</td>
+</tr>
+</tbody>
+</table>
+
+<p>1119120 rows × 9 columns</p>
+</div>
+</div>
+</div>
+<div id="ced59fcc" class="cell" data-execution_count="20">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>mapa_nombres <span class="op">=</span> {</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"bws_score"</span>: <span class="st">"Baseline water stress"</span>,</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"bwd_score"</span>: <span class="st">"Water depletion"</span>,</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"iav_score"</span>: <span class="st">"Interannual variability"</span>,</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"sev_score"</span>: <span class="st">"Seasonal variability"</span>,</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"drr_score"</span>: <span class="st">"Drought risk"</span>,</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"rfr_score"</span>: <span class="st">"River flood risk"</span>,</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"cfr_score"</span>: <span class="st">"Coastal flood risk"</span>,</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"ucw_score"</span>: <span class="st">"Untreated wastewater"</span>,</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"cep_score"</span>: <span class="st">"Coastal eutrophication"</span>,</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"udw_score"</span>: <span class="st">"No drinking water"</span>,</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"usa_score"</span>: <span class="st">"No sanitation"</span>,</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"w_awr_agr_tot_score"</span>: <span class="st">"Agriculture"</span>,</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"w_awr_che_tot_score"</span>: <span class="st">"Chemicals"</span>,</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"w_awr_con_tot_score"</span>: <span class="st">"Construction materials"</span>,</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"w_awr_elp_tot_score"</span>: <span class="st">"Electric power"</span>,</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">"w_awr_fnb_tot_score"</span>: <span class="st">"Food &amp; beverage"</span>,</span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">"w_awr_min_tot_score"</span>: <span class="st">"Mining"</span>,</span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">"w_awr_ong_tot_score"</span>: <span class="st">"Oil &amp; gas"</span>,</span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">"w_awr_smc_tot_score"</span>: <span class="st">"Semiconductor"</span>,</span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">"w_awr_tex_tot_score"</span>: <span class="st">"Textile"</span>,</span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Riesgo_Hidrologico_total"</span>: <span class="st">"Riesgo Hidrológico total"</span>,</span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Riesgo_Eventos_total"</span>: <span class="st">"Riesgo Eventos total"</span>,</span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Riesgo_Calidad_Agua_total"</span>: <span class="st">"Riesgo Calidad Agua total"</span>,</span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Riesgo_por_Industria_total"</span>: <span class="st">"Riesgo por Industria total"</span></span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a>df_long[<span class="st">"score_nombre"</span>] <span class="op">=</span> df_long[<span class="st">"score"</span>].<span class="bu">map</span>(mapa_nombres)</span>
+<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a>df_long</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="41">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">string_id</th>
+<th data-quarto-table-cell-role="th">aq30_id</th>
+<th data-quarto-table-cell-role="th">name_0</th>
+<th data-quarto-table-cell-role="th">name_1</th>
+<th data-quarto-table-cell-role="th">area_km2</th>
+<th data-quarto-table-cell-role="th">continent</th>
+<th data-quarto-table-cell-role="th">score</th>
+<th data-quarto-table-cell-role="th">value</th>
+<th data-quarto-table-cell-role="th">category</th>
+<th data-quarto-table-cell-role="th">score_nombre</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>111081-ERI.2_1-3365</td>
+<td>89</td>
+<td>Eritrea</td>
+<td>Debub</td>
+<td>6.445810</td>
+<td>Africa</td>
+<td>bws_score</td>
+<td>4.745978</td>
+<td>riesgo_hidrologico</td>
+<td>Baseline water stress</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>111081-ERI.6_1-3365</td>
+<td>90</td>
+<td>Eritrea</td>
+<td>Semenawi Keyih Bahri</td>
+<td>210.189947</td>
+<td>Africa</td>
+<td>bws_score</td>
+<td>4.745978</td>
+<td>riesgo_hidrologico</td>
+<td>Baseline water stress</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>111081-SDN.11_1-1775</td>
+<td>92</td>
+<td>Sudan</td>
+<td>Red Sea</td>
+<td>725.925119</td>
+<td>Africa</td>
+<td>bws_score</td>
+<td>4.745978</td>
+<td>riesgo_hidrologico</td>
+<td>Baseline water stress</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>111081-SDN.11_1-1930</td>
+<td>93</td>
+<td>Sudan</td>
+<td>Red Sea</td>
+<td>345.262750</td>
+<td>Africa</td>
+<td>bws_score</td>
+<td>4.745978</td>
+<td>riesgo_hidrologico</td>
+<td>Baseline water stress</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>111081-SDN.11_1-3365</td>
+<td>94</td>
+<td>Sudan</td>
+<td>Red Sea</td>
+<td>2989.133981</td>
+<td>Africa</td>
+<td>bws_score</td>
+<td>4.745978</td>
+<td>riesgo_hidrologico</td>
+<td>Baseline water stress</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">...</th>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">1119115</th>
+<td>832808-CAN.3_1-352</td>
+<td>61194</td>
+<td>Canada</td>
+<td>Manitoba</td>
+<td>1657.645142</td>
+<td>North America</td>
+<td>Riesgo_por_Industria_total</td>
+<td>0.672614</td>
+<td>total</td>
+<td>Riesgo por Industria total</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1119116</th>
+<td>832808-CAN.8_1-352</td>
+<td>61195</td>
+<td>Canada</td>
+<td>Nunavut</td>
+<td>1468.762076</td>
+<td>North America</td>
+<td>Riesgo_por_Industria_total</td>
+<td>0.672614</td>
+<td>total</td>
+<td>Riesgo por Industria total</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">1119117</th>
+<td>832809-CAN.12_1-352</td>
+<td>61196</td>
+<td>Canada</td>
+<td>Saskatchewan</td>
+<td>174.810225</td>
+<td>North America</td>
+<td>Riesgo_por_Industria_total</td>
+<td>0.532449</td>
+<td>total</td>
+<td>Riesgo por Industria total</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1119118</th>
+<td>832809-CAN.3_1-352</td>
+<td>61197</td>
+<td>Canada</td>
+<td>Manitoba</td>
+<td>7985.673792</td>
+<td>North America</td>
+<td>Riesgo_por_Industria_total</td>
+<td>0.532449</td>
+<td>total</td>
+<td>Riesgo por Industria total</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">1119119</th>
+<td>832809-CAN.8_1-352</td>
+<td>61198</td>
+<td>Canada</td>
+<td>Nunavut</td>
+<td>191.681814</td>
+<td>North America</td>
+<td>Riesgo_por_Industria_total</td>
+<td>0.532449</td>
+<td>total</td>
+<td>Riesgo por Industria total</td>
+</tr>
+</tbody>
+</table>
+
+<p>1119120 rows × 10 columns</p>
+</div>
+</div>
+</div>
+</section>
+<section id="data-saving" class="level2">
+<h2 class="anchored" data-anchor-id="data-saving"><strong>Data Saving</strong></h2>
+<blockquote class="blockquote">
+<p>El dataset limpio se guarda para ser utilizado en la etapa de visualización</p>
+</blockquote>
+<div id="7f7433c8" class="cell" data-execution_count="21">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>os.makedirs(<span class="st">"data"</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>df_long.to_csv(<span class="st">"data/cleaned_data_long_format.csv"</span>, index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># si se guardo el archivo, mostrar un mensaje de confirmacion</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> os.path.exists(<span class="st">"data/cleaned_data_long_format.csv"</span>):</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Archivo guardado exitosamente en data/cleaned_data_long_format.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Archivo guardado exitosamente en data/cleaned_data_long_format.csv</code></pre>
+</div>
+</div>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

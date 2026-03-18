@@ -1,0 +1,25 @@
+project: 
+  type: website
+  output-dir: docs
+
+website: 
+  title: "Riesgo Hídrico en Ecuador"
+  description: "Análisis y visualización del riesgo hídrico en las provincias del Ecuador utilizando el dataset Aqueduct40."
+  navbar: 
+    left: 
+      - text: "Inicio"
+        href: index.qmd
+      - text: "Limpieza de Datos"
+        href: data_cleaning.qmd
+      - text: "Visualizaciones"
+        href: visualizations.qmd
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-depth: 3
+    code-fold: true
+
+execute: 
+  freeze: auto
