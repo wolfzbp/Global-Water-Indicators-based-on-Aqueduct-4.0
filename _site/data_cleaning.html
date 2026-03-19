@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>data_cleaning</title>
+<title>data_cleaning – Riesgo Hídrico en Ecuador</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -58,30 +58,121 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="data_cleaning_files/libs/clipboard/clipboard.min.js"></script>
-<script src="data_cleaning_files/libs/quarto-html/quarto.js" type="module"></script>
-<script src="data_cleaning_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="data_cleaning_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
-<script src="data_cleaning_files/libs/quarto-html/popper.min.js"></script>
-<script src="data_cleaning_files/libs/quarto-html/tippy.umd.min.js"></script>
-<script src="data_cleaning_files/libs/quarto-html/anchor.min.js"></script>
-<link href="data_cleaning_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="data_cleaning_files/libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="data_cleaning_files/libs/bootstrap/bootstrap.min.js"></script>
-<link href="data_cleaning_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="data_cleaning_files/libs/bootstrap/bootstrap-9e3ffae467580fdb927a41352e75a2e0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-ffa9a6279353761231ec249df0a7fdd3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
 <script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
+
 </head>
 
-<body class="fullcontent quarto-light">
+<body class="nav-fixed quarto-light">
 
-<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
-
-<main class="content" id="quarto-document-content">
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Riesgo Hídrico en Ecuador</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Inicio</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./data_cleaning.html" aria-current="page"> 
+<span class="menu-text">Análisis</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./visualizations.html"> 
+<span class="menu-text">Visualizaciones</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#preparación-y-limpieza-de-datos" id="toc-preparación-y-limpieza-de-datos" class="nav-link active" data-scroll-target="#preparación-y-limpieza-de-datos"><strong>Preparación y limpieza de datos</strong></a>
+  <ul class="collapse">
+  <li><a href="#carga-de-dataset" id="toc-carga-de-dataset" class="nav-link" data-scroll-target="#carga-de-dataset"><strong>Carga de dataset</strong></a></li>
+  <li><a href="#seleccion-de-variables-de-interes" id="toc-seleccion-de-variables-de-interes" class="nav-link" data-scroll-target="#seleccion-de-variables-de-interes"><strong>Seleccion de variables de interes</strong></a></li>
+  <li><a href="#gestionar-valores-nulls-e-inconsistentes" id="toc-gestionar-valores-nulls-e-inconsistentes" class="nav-link" data-scroll-target="#gestionar-valores-nulls-e-inconsistentes"><strong>Gestionar valores nulls e inconsistentes</strong></a></li>
+  <li><a href="#eliminacion-de-valores-inconsistentes" id="toc-eliminacion-de-valores-inconsistentes" class="nav-link" data-scroll-target="#eliminacion-de-valores-inconsistentes"><strong>Eliminacion de valores inconsistentes</strong></a></li>
+  <li><a href="#data-augmentation" id="toc-data-augmentation" class="nav-link" data-scroll-target="#data-augmentation"><strong>Data augmentation</strong></a></li>
+  <li><a href="#data-transformation-restructuring" id="toc-data-transformation-restructuring" class="nav-link" data-scroll-target="#data-transformation-restructuring"><strong>Data Transformation: Restructuring</strong></a></li>
+  <li><a href="#data-saving" id="toc-data-saving" class="nav-link" data-scroll-target="#data-saving"><strong>Data Saving</strong></a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
 
 
 
@@ -95,17 +186,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>El dataset se obtuvo de: <a href="https://www.wri.org/data/aqueduct-global-maps-40-data#download-form">Aqueduct 4.0 Current and Future Global Maps Data</a></p>
 <section id="carga-de-dataset" class="level2">
 <h2 class="anchored" data-anchor-id="carga-de-dataset"><strong>Carga de dataset</strong></h2>
-<div id="38c21c05" class="cell" data-execution_count="1">
+<div id="72cbd5f2" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
 <blockquote class="blockquote">
 <p>Se cargo el dataset a un release de Github para poder leerlo desde una URL publica</p>
 </blockquote>
-<div id="06735101" class="cell" data-execution_count="2">
+<div id="09f6a5bb" class="cell" data-execution_count="2">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://github.com/wolfzbp/Global-Water-Indicators-based-on-Aqueduct-4.0/releases/download/v1.0/Aqueduct40_baseline_annual_y2023m07d05.csv"</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(url)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>df</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="23">
+</details>
+<div class="cell-output cell-output-display" data-execution_count="3">
 <div>
 
 
@@ -411,7 +508,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="seleccion-de-variables-de-interes" class="level2">
 <h2 class="anchored" data-anchor-id="seleccion-de-variables-de-interes"><strong>Seleccion de variables de interes</strong></h2>
-<div id="92b19861" class="cell" data-execution_count="3">
+<div id="5d0bbb1a" class="cell" data-execution_count="3">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># clasificar columnas en categorias, y crear una lista de cada categoria con los nombres de las columnas correspondientes</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>identificadores <span class="op">=</span> [</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"string_id"</span>, </span>
@@ -453,11 +552,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>    <span class="st">"w_awr_smc_tot_score"</span>,   <span class="co"># Semiconductor es el score de semiconductor</span></span>
 <span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>    <span class="st">"w_awr_tex_tot_score"</span>    <span class="co"># Textile es el score de textil</span></span>
 <span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
-<div id="ead025ca" class="cell" data-execution_count="4">
+<div id="5be83bfb" class="cell" data-execution_count="4">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>df_selected <span class="op">=</span> df[identificadores <span class="op">+</span> riesgo_hidrologico <span class="op">+</span> eventos_hidrologicos <span class="op">+</span> calidad_agua <span class="op">+</span> por_industria]</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>df_selected.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="25">
+</details>
+<div class="cell-output cell-output-display" data-execution_count="5">
 <div>
 
 
@@ -619,10 +722,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="gestionar-valores-nulls-e-inconsistentes" class="level2">
 <h2 class="anchored" data-anchor-id="gestionar-valores-nulls-e-inconsistentes"><strong>Gestionar valores nulls e inconsistentes</strong></h2>
-<div id="f2a456de" class="cell" data-execution_count="5">
+<div id="6d521096" class="cell" data-execution_count="5">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># contar valores nulos por columna</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>df_selected.isna().<span class="bu">sum</span>().sort_values(ascending<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="26">
+</details>
+<div class="cell-output cell-output-display" data-execution_count="6">
 <pre><code>name_0                 10022
 name_1                 10022
 string_id                  0
@@ -651,12 +757,18 @@ w_awr_tex_tot_score        0
 dtype: int64</code></pre>
 </div>
 </div>
-<div id="dfeeb0bc" class="cell" data-execution_count="6">
+<div id="e47f3247" class="cell" data-execution_count="6">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>df_selected <span class="op">=</span> df_selected[<span class="op">~</span>(df_selected[<span class="st">'name_0'</span>].isna() <span class="op">|</span> df_selected[<span class="st">'name_1'</span>].isna())]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
-<div id="bf57e057" class="cell" data-execution_count="7">
+<div id="8e3ca1c6" class="cell" data-execution_count="7">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>df_selected.isnull().<span class="bu">sum</span>().sort_values(ascending<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="28">
+</details>
+<div class="cell-output cell-output-display" data-execution_count="8">
 <pre><code>string_id              0
 aq30_id                0
 name_0                 0
@@ -688,14 +800,17 @@ dtype: int64</code></pre>
 </section>
 <section id="eliminacion-de-valores-inconsistentes" class="level2">
 <h2 class="anchored" data-anchor-id="eliminacion-de-valores-inconsistentes"><strong>Eliminacion de valores inconsistentes</strong></h2>
-<div id="0aaf5912" class="cell" data-execution_count="8">
+<div id="7095462a" class="cell" data-execution_count="8">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># contar los valores -9999 por cada columna, y mostrar el porcentaje respecto al total de filas, crear un nuevo dataframe con el resultado, y mostrarlo</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>missing_values_count <span class="op">=</span> df_selected.isin([<span class="op">-</span><span class="dv">9999</span>]).<span class="bu">sum</span>()</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>total_rows <span class="op">=</span> <span class="bu">len</span>(df_selected)</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>missing_values_percentage <span class="op">=</span> (missing_values_count <span class="op">/</span> total_rows) <span class="op">*</span> <span class="dv">100</span></span>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>df_missing_values <span class="op">=</span> pd.DataFrame({<span class="st">'Missing Values'</span>: missing_values_count, <span class="st">'Percentage'</span>: missing_values_percentage})</span>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>df_missing_values[df_missing_values[<span class="st">'Percentage'</span>] <span class="op">&gt;</span> <span class="dv">0</span>].sort_values(by<span class="op">=</span><span class="st">'Percentage'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="29">
+</details>
+<div class="cell-output cell-output-display" data-execution_count="9">
 <div>
 
 
@@ -814,10 +929,13 @@ dtype: int64</code></pre>
 </div>
 </div>
 </div>
-<div id="07c48aca" class="cell" data-execution_count="9">
+<div id="751e0a4a" class="cell" data-execution_count="9">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>df_cleaned <span class="op">=</span> df_selected[df_selected[<span class="st">'drr_score'</span>] <span class="op">!=</span> <span class="op">-</span><span class="dv">9999</span>]</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>df_cleaned</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="30">
+</details>
+<div class="cell-output cell-output-display" data-execution_count="10">
 <div>
 
 
@@ -1120,14 +1238,17 @@ dtype: int64</code></pre>
 </div>
 </div>
 </div>
-<div id="87dffd1f" class="cell" data-execution_count="10">
+<div id="860cf5c2" class="cell" data-execution_count="10">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># contar los valores -9999 por cada columna, y mostrar el porcentaje respecto al total de filas, crear un nuevo dataframe con el resultado, y mostrarlo</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>missing_values_count <span class="op">=</span> df_cleaned.isin([<span class="op">-</span><span class="dv">9999</span>]).<span class="bu">sum</span>()</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>total_rows <span class="op">=</span> <span class="bu">len</span>(df_cleaned)</span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>missing_values_percentage <span class="op">=</span> (missing_values_count <span class="op">/</span> total_rows) <span class="op">*</span> <span class="dv">100</span></span>
 <span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>df_missing_values <span class="op">=</span> pd.DataFrame({<span class="st">'Missing Values'</span>: missing_values_count, <span class="st">'Percentage'</span>: missing_values_percentage})</span>
 <span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>df_missing_values[df_missing_values[<span class="st">'Percentage'</span>] <span class="op">&gt;</span> <span class="dv">0</span>].sort_values(by<span class="op">=</span><span class="st">'Percentage'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="31">
+</details>
+<div class="cell-output cell-output-display" data-execution_count="11">
 <div>
 
 
@@ -1221,7 +1342,9 @@ dtype: int64</code></pre>
 </div>
 </div>
 </div>
-<div id="263beac6" class="cell" data-execution_count="11">
+<div id="769a014e" class="cell" data-execution_count="11">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>df_cleaned <span class="op">=</span> df_cleaned[df_cleaned[<span class="st">'w_awr_smc_tot_score'</span>] <span class="op">!=</span> <span class="op">-</span><span class="dv">9999</span>]</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># contar los valores -9999 por cada columna, y mostrar el porcentaje respecto al total de filas, crear un nuevo dataframe con el resultado, y mostrarlo</span></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>missing_values_count <span class="op">=</span> df_cleaned.isin([<span class="op">-</span><span class="dv">9999</span>]).<span class="bu">sum</span>()</span>
@@ -1229,7 +1352,8 @@ dtype: int64</code></pre>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>missing_values_percentage <span class="op">=</span> (missing_values_count <span class="op">/</span> total_rows) <span class="op">*</span> <span class="dv">100</span></span>
 <span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>df_missing_values <span class="op">=</span> pd.DataFrame({<span class="st">'Missing Values'</span>: missing_values_count, <span class="st">'Percentage'</span>: missing_values_percentage})</span>
 <span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>df_missing_values[df_missing_values[<span class="st">'Percentage'</span>] <span class="op">&gt;</span> <span class="dv">0</span>].sort_values(by<span class="op">=</span><span class="st">'Percentage'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="32">
+</details>
+<div class="cell-output cell-output-display" data-execution_count="12">
 <div>
 
 
@@ -1268,7 +1392,9 @@ dtype: int64</code></pre>
 </div>
 </div>
 </div>
-<div id="5414400c" class="cell" data-execution_count="12">
+<div id="dabaf7de" class="cell" data-execution_count="12">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>df_cleaned <span class="op">=</span> df_cleaned[df_cleaned[<span class="st">'cep_score'</span>] <span class="op">!=</span> <span class="op">-</span><span class="dv">9999</span>]</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># contar los valores -9999 por cada columna, y mostrar el porcentaje respecto al total de filas, crear un nuevo dataframe con el resultado, y mostrarlo</span></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>missing_values_count <span class="op">=</span> df_cleaned.isin([<span class="op">-</span><span class="dv">9999</span>]).<span class="bu">sum</span>()</span>
@@ -1276,7 +1402,8 @@ dtype: int64</code></pre>
 <span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>missing_values_percentage <span class="op">=</span> (missing_values_count <span class="op">/</span> total_rows) <span class="op">*</span> <span class="dv">100</span></span>
 <span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>df_missing_values <span class="op">=</span> pd.DataFrame({<span class="st">'Missing Values'</span>: missing_values_count, <span class="st">'Percentage'</span>: missing_values_percentage})</span>
 <span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>df_missing_values[df_missing_values[<span class="st">'Percentage'</span>] <span class="op">&gt;</span> <span class="dv">0</span>].sort_values(by<span class="op">=</span><span class="st">'Percentage'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="33">
+</details>
+<div class="cell-output cell-output-display" data-execution_count="13">
 <div>
 
 
@@ -1305,7 +1432,9 @@ dtype: int64</code></pre>
 </div>
 </div>
 </div>
-<div id="b2717262" class="cell" data-execution_count="13">
+<div id="674409a7" class="cell" data-execution_count="13">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>df_cleaned <span class="op">=</span> df_cleaned[df_cleaned[<span class="st">'iav_score'</span>] <span class="op">!=</span> <span class="op">-</span><span class="dv">9999</span>]</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># contar los valores -9999 por cada columna, y mostrar el porcentaje respecto al total de filas, crear un nuevo dataframe con el resultado, y mostrarlo</span></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>missing_values_count <span class="op">=</span> df_cleaned.isin([<span class="op">-</span><span class="dv">9999</span>]).<span class="bu">sum</span>()</span>
@@ -1313,7 +1442,8 @@ dtype: int64</code></pre>
 <span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>missing_values_percentage <span class="op">=</span> (missing_values_count <span class="op">/</span> total_rows) <span class="op">*</span> <span class="dv">100</span></span>
 <span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>df_missing_values <span class="op">=</span> pd.DataFrame({<span class="st">'Missing Values'</span>: missing_values_count, <span class="st">'Percentage'</span>: missing_values_percentage})</span>
 <span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>df_missing_values[df_missing_values[<span class="st">'Percentage'</span>] <span class="op">&gt;</span> <span class="dv">0</span>].sort_values(by<span class="op">=</span><span class="st">'Percentage'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="34">
+</details>
+<div class="cell-output cell-output-display" data-execution_count="14">
 <div>
 
 
@@ -1332,9 +1462,12 @@ dtype: int64</code></pre>
 </div>
 </div>
 </div>
-<div id="b40a2eb6" class="cell" data-execution_count="14">
+<div id="65291a30" class="cell" data-execution_count="14">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>df_cleaned</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="35">
+</details>
+<div class="cell-output cell-output-display" data-execution_count="15">
 <div>
 
 
@@ -1643,7 +1776,9 @@ dtype: int64</code></pre>
 <blockquote class="blockquote">
 <p>clasificar los paises por regiones</p>
 </blockquote>
-<div id="cff5b354" class="cell" data-execution_count="15">
+<div id="bfc6f73b" class="cell" data-execution_count="15">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>africa <span class="op">=</span> [</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Egypt'</span>,<span class="st">'Sudan'</span>,<span class="st">'Eritrea'</span>,<span class="st">'Somalia'</span>,<span class="st">'Ethiopia'</span>,<span class="st">'Djibouti'</span>,</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Kenya'</span>,<span class="st">'Tanzania'</span>,<span class="st">'Uganda'</span>,<span class="st">'South Sudan'</span>,<span class="st">'Zambia'</span>,<span class="st">'Mozambique'</span>,</span>
@@ -1746,7 +1881,8 @@ dtype: int64</code></pre>
 <span id="cb17-100"><a href="#cb17-100" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-101"><a href="#cb17-101" aria-hidden="true" tabindex="-1"></a>df_cleaned[<span class="st">'continent'</span>] <span class="op">=</span> df_cleaned[<span class="st">'name_0'</span>].<span class="bu">map</span>(continent_map)</span>
 <span id="cb17-102"><a href="#cb17-102" aria-hidden="true" tabindex="-1"></a>df_cleaned.groupby(<span class="st">'continent'</span>)[<span class="st">'name_0'</span>].count()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="36">
+</details>
+<div class="cell-output cell-output-display" data-execution_count="16">
 <pre><code>continent
 Africa              9784
 Asia               12379
@@ -1759,15 +1895,20 @@ South America       6316
 Name: name_0, dtype: int64</code></pre>
 </div>
 </div>
-<div id="936f854c" class="cell" data-execution_count="16">
+<div id="590a516b" class="cell" data-execution_count="16">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>df_cleaned[df_cleaned[<span class="st">'continent'</span>].isna()][<span class="st">'name_0'</span>].unique()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="37">
+</details>
+<div class="cell-output cell-output-display" data-execution_count="17">
 <pre><code>&lt;StringArray&gt;
 []
 Length: 0, dtype: str</code></pre>
 </div>
 </div>
-<div id="1d9352d3" class="cell" data-execution_count="17">
+<div id="266fc67f" class="cell" data-execution_count="17">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Creación de Macro-indicadores</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>df_cleaned[<span class="st">'Riesgo_Hidrologico_total'</span>] <span class="op">=</span> df_cleaned[riesgo_hidrologico].mean(axis<span class="op">=</span><span class="dv">1</span>)</span>
@@ -1775,7 +1916,8 @@ Length: 0, dtype: str</code></pre>
 <span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>df_cleaned[<span class="st">'Riesgo_Calidad_Agua_total'</span>] <span class="op">=</span> df_cleaned[calidad_agua].mean(axis<span class="op">=</span><span class="dv">1</span>)</span>
 <span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>df_cleaned[<span class="st">'Riesgo_por_Industria_total'</span>] <span class="op">=</span> df_cleaned[por_industria].mean(axis<span class="op">=</span><span class="dv">1</span>)</span>
 <span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>df_cleaned[df_cleaned[<span class="st">'continent'</span>] <span class="op">==</span> <span class="st">'Africa'</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="38">
+</details>
+<div class="cell-output cell-output-display" data-execution_count="18">
 <div>
 
 
@@ -2078,13 +2220,16 @@ Length: 0, dtype: str</code></pre>
 </div>
 </div>
 </div>
-<div id="ceff73f8" class="cell" data-execution_count="18">
+<div id="028843ef" class="cell" data-execution_count="18">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>os.makedirs(<span class="st">"data"</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>df_cleaned.to_csv(<span class="st">"data/cleaned_data.csv"</span>, index<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co"># si se guardo el archivo, mostrar un mensaje de confirmacion</span></span>
 <span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> os.path.exists(<span class="st">"data/cleaned_data.csv"</span>):</span>
 <span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Archivo guardado exitosamente en data/cleaned_data.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Archivo guardado exitosamente en data/cleaned_data.csv</code></pre>
 </div>
@@ -2095,7 +2240,9 @@ Length: 0, dtype: str</code></pre>
 <blockquote class="blockquote">
 <p>Pasar de wide format a long format para facilitar la visualizacion de las variables</p>
 </blockquote>
-<div id="8410f20c" class="cell" data-execution_count="19">
+<div id="44339048" class="cell" data-execution_count="19">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>totales <span class="op">=</span> [<span class="st">'Riesgo_Hidrologico_total'</span>, <span class="st">'Riesgo_Eventos_total'</span>, <span class="st">'Riesgo_Calidad_Agua_total'</span>, <span class="st">'Riesgo_por_Industria_total'</span>]</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Diccionario score -&gt; categoria</span></span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>mapa_categorias <span class="op">=</span> {}</span>
@@ -2134,7 +2281,8 @@ Length: 0, dtype: str</code></pre>
 <span id="cb24-36"><a href="#cb24-36" aria-hidden="true" tabindex="-1"></a>df_long[<span class="st">"category"</span>] <span class="op">=</span> df_long[<span class="st">"score"</span>].<span class="bu">map</span>(mapa_categorias)</span>
 <span id="cb24-37"><a href="#cb24-37" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb24-38"><a href="#cb24-38" aria-hidden="true" tabindex="-1"></a>df_long</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="40">
+</details>
+<div class="cell-output cell-output-display" data-execution_count="20">
 <div>
 
 
@@ -2293,7 +2441,9 @@ Length: 0, dtype: str</code></pre>
 </div>
 </div>
 </div>
-<div id="ced59fcc" class="cell" data-execution_count="20">
+<div id="58a9873d" class="cell" data-execution_count="20">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>mapa_nombres <span class="op">=</span> {</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"bws_score"</span>: <span class="st">"Baseline water stress"</span>,</span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"bwd_score"</span>: <span class="st">"Water depletion"</span>,</span>
@@ -2323,7 +2473,8 @@ Length: 0, dtype: str</code></pre>
 <span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a>df_long[<span class="st">"score_nombre"</span>] <span class="op">=</span> df_long[<span class="st">"score"</span>].<span class="bu">map</span>(mapa_nombres)</span>
 <span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a>df_long</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="41">
+</details>
+<div class="cell-output cell-output-display" data-execution_count="21">
 <div>
 
 
@@ -2500,22 +2651,26 @@ Length: 0, dtype: str</code></pre>
 <blockquote class="blockquote">
 <p>El dataset limpio se guarda para ser utilizado en la etapa de visualización</p>
 </blockquote>
-<div id="7f7433c8" class="cell" data-execution_count="21">
+<div id="542edf8e" class="cell" data-execution_count="21">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>os.makedirs(<span class="st">"data"</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>df_long.to_csv(<span class="st">"data/cleaned_data_long_format.csv"</span>, index<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># si se guardo el archivo, mostrar un mensaje de confirmacion</span></span>
 <span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> os.path.exists(<span class="st">"data/cleaned_data_long_format.csv"</span>):</span>
 <span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Archivo guardado exitosamente en data/cleaned_data_long_format.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Archivo guardado exitosamente en data/cleaned_data_long_format.csv</code></pre>
 </div>
 </div>
+
+
 </section>
 </section>
 
-</main>
-<!-- /main column -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

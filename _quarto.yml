@@ -1,6 +1,6 @@
 project:
   type: website
-  output-dir: _site
+  output-dir: docs
 
 website:
   title: "Riesgo Hídrico en Ecuador"
@@ -16,7 +16,7 @@ website:
 
 format:
   html:
-    theme: cosmo
+    theme: flatly
     toc: true
     toc-depth: 3
     code-fold: true

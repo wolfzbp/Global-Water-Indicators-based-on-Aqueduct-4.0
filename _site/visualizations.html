@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>0. Carga de datos</title>
+<title>0. Carga de datos – Riesgo Hídrico en Ecuador</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -58,29 +58,170 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="visualizations_files/libs/clipboard/clipboard.min.js"></script>
-<script src="visualizations_files/libs/quarto-html/quarto.js" type="module"></script>
-<script src="visualizations_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="visualizations_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
-<script src="visualizations_files/libs/quarto-html/popper.min.js"></script>
-<script src="visualizations_files/libs/quarto-html/tippy.umd.min.js"></script>
-<script src="visualizations_files/libs/quarto-html/anchor.min.js"></script>
-<link href="visualizations_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="visualizations_files/libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="visualizations_files/libs/bootstrap/bootstrap.min.js"></script>
-<link href="visualizations_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="visualizations_files/libs/bootstrap/bootstrap-9e3ffae467580fdb927a41352e75a2e0.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-ffa9a6279353761231ec249df0a7fdd3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
 <script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
+
 </head>
 
-<body class="fullcontent quarto-light">
+<body class="nav-fixed quarto-light">
 
-<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
-
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Riesgo Hídrico en Ecuador</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Inicio</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./data_cleaning.html"> 
+<span class="menu-text">Análisis</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./visualizations.html" aria-current="page"> 
+<span class="menu-text">Visualizaciones</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#ecuador-en-el-contexto-global-del-estrés-hídrico" id="toc-ecuador-en-el-contexto-global-del-estrés-hídrico" class="nav-link active" data-scroll-target="#ecuador-en-el-contexto-global-del-estrés-hídrico"><strong>1. Ecuador en el contexto global del estrés hídrico</strong></a>
+  <ul class="collapse">
+  <li><a href="#contexto-de-la-pregunta-analítica" id="toc-contexto-de-la-pregunta-analítica" class="nav-link" data-scroll-target="#contexto-de-la-pregunta-analítica"><strong>Contexto de la pregunta analítica</strong></a></li>
+  <li><a href="#visualización" id="toc-visualización" class="nav-link" data-scroll-target="#visualización"><strong>Visualización</strong></a></li>
+  <li><a href="#interpretación" id="toc-interpretación" class="nav-link" data-scroll-target="#interpretación"><strong>Interpretación</strong></a>
+  <ul class="collapse">
+  <li><a href="#interpretación-analítica-ecuador-en-el-contexto-global-del-estrés-hídrico" id="toc-interpretación-analítica-ecuador-en-el-contexto-global-del-estrés-hídrico" class="nav-link" data-scroll-target="#interpretación-analítica-ecuador-en-el-contexto-global-del-estrés-hídrico">📊 1. Interpretación Analítica: Ecuador en el contexto global del estrés hídrico</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#riesgo-hidrológico-por-provincia" id="toc-riesgo-hidrológico-por-provincia" class="nav-link" data-scroll-target="#riesgo-hidrológico-por-provincia"><strong>2. Riesgo hidrológico por provincia</strong></a>
+  <ul class="collapse">
+  <li><a href="#contexto-de-la-pregunta-analítica-1" id="toc-contexto-de-la-pregunta-analítica-1" class="nav-link" data-scroll-target="#contexto-de-la-pregunta-analítica-1"><strong>Contexto de la pregunta analítica</strong></a></li>
+  <li><a href="#visualización-1" id="toc-visualización-1" class="nav-link" data-scroll-target="#visualización-1"><strong>Visualización</strong></a></li>
+  <li><a href="#interpretación-1" id="toc-interpretación-1" class="nav-link" data-scroll-target="#interpretación-1"><strong>Interpretación</strong></a>
+  <ul class="collapse">
+  <li><a href="#interpretación-analíticas" id="toc-interpretación-analíticas" class="nav-link" data-scroll-target="#interpretación-analíticas">📊 2. Interpretación Analíticas</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#eventos-hidrológicos" id="toc-eventos-hidrológicos" class="nav-link" data-scroll-target="#eventos-hidrológicos"><strong>3. Eventos hidrológicos</strong></a>
+  <ul class="collapse">
+  <li><a href="#contexto-de-la-pregunta-analítica-2" id="toc-contexto-de-la-pregunta-analítica-2" class="nav-link" data-scroll-target="#contexto-de-la-pregunta-analítica-2"><strong>Contexto de la pregunta analítica</strong></a>
+  <ul class="collapse">
+  <li><a href="#interpretación-analítica-análisis-bivariado-de-riesgo-de-inundaciones" id="toc-interpretación-analítica-análisis-bivariado-de-riesgo-de-inundaciones" class="nav-link" data-scroll-target="#interpretación-analítica-análisis-bivariado-de-riesgo-de-inundaciones">📊 3. Interpretación Analítica: Análisis Bivariado de Riesgo de Inundaciones</a></li>
+  </ul></li>
+  <li><a href="#visualización-2" id="toc-visualización-2" class="nav-link" data-scroll-target="#visualización-2"><strong>Visualización</strong></a></li>
+  <li><a href="#interpretación-2" id="toc-interpretación-2" class="nav-link" data-scroll-target="#interpretación-2"><strong>Interpretación</strong></a>
+  <ul class="collapse">
+  <li><a href="#interpretación-analítica" id="toc-interpretación-analítica" class="nav-link" data-scroll-target="#interpretación-analítica">📊 3. Interpretación Analítica:</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#calidad-del-agua" id="toc-calidad-del-agua" class="nav-link" data-scroll-target="#calidad-del-agua"><strong>4. Calidad del agua</strong></a>
+  <ul class="collapse">
+  <li><a href="#contexto-de-la-pregunta-analítica-3" id="toc-contexto-de-la-pregunta-analítica-3" class="nav-link" data-scroll-target="#contexto-de-la-pregunta-analítica-3"><strong>Contexto de la pregunta analítica</strong></a></li>
+  <li><a href="#visualización-3" id="toc-visualización-3" class="nav-link" data-scroll-target="#visualización-3"><strong>Visualización</strong></a></li>
+  <li><a href="#interpretación-3" id="toc-interpretación-3" class="nav-link" data-scroll-target="#interpretación-3"><strong>Interpretación</strong></a>
+  <ul class="collapse">
+  <li><a href="#interpretación-analítica-vulnerabilidad-en-calidad-del-agua-y-servicios" id="toc-interpretación-analítica-vulnerabilidad-en-calidad-del-agua-y-servicios" class="nav-link" data-scroll-target="#interpretación-analítica-vulnerabilidad-en-calidad-del-agua-y-servicios">📊 4. Interpretación Analítica: Vulnerabilidad en Calidad del Agua y Servicios</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#riesgo-por-industria" id="toc-riesgo-por-industria" class="nav-link" data-scroll-target="#riesgo-por-industria"><strong>5. Riesgo por industria</strong></a>
+  <ul class="collapse">
+  <li><a href="#contexto-de-la-pregunta-analítica-4" id="toc-contexto-de-la-pregunta-analítica-4" class="nav-link" data-scroll-target="#contexto-de-la-pregunta-analítica-4"><strong>Contexto de la pregunta analítica</strong></a>
+  <ul class="collapse">
+  <li><a href="#contexto-analítico-riesgo-hídrico-en-sectores-productivos" id="toc-contexto-analítico-riesgo-hídrico-en-sectores-productivos" class="nav-link" data-scroll-target="#contexto-analítico-riesgo-hídrico-en-sectores-productivos">Contexto Analítico: Riesgo Hídrico en Sectores Productivos</a></li>
+  </ul></li>
+  <li><a href="#visualización-4" id="toc-visualización-4" class="nav-link" data-scroll-target="#visualización-4"><strong>Visualización</strong></a></li>
+  <li><a href="#interpretación-4" id="toc-interpretación-4" class="nav-link" data-scroll-target="#interpretación-4"><strong>Interpretación</strong></a>
+  <ul class="collapse">
+  <li><a href="#interpretación-analítica-impacto-económico-del-riesgo-hídrico" id="toc-interpretación-analítica-impacto-económico-del-riesgo-hídrico" class="nav-link" data-scroll-target="#interpretación-analítica-impacto-económico-del-riesgo-hídrico">📊 5. Interpretación Analítica: Impacto Económico del Riesgo Hídrico</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#integración-del-análisis" id="toc-integración-del-análisis" class="nav-link" data-scroll-target="#integración-del-análisis"><strong>6. Integración del análisis</strong></a>
+  <ul class="collapse">
+  <li><a href="#contexto-de-la-pregunta-analítica-5" id="toc-contexto-de-la-pregunta-analítica-5" class="nav-link" data-scroll-target="#contexto-de-la-pregunta-analítica-5"><strong>Contexto de la pregunta analítica</strong></a></li>
+  <li><a href="#visualización-5" id="toc-visualización-5" class="nav-link" data-scroll-target="#visualización-5"><strong>Visualización</strong></a></li>
+  <li><a href="#interpretación-5" id="toc-interpretación-5" class="nav-link" data-scroll-target="#interpretación-5"><strong>Interpretación</strong></a>
+  <ul class="collapse">
+  <li><a href="#interpretación-analítica-matriz-de-perfiles-de-riesgo-hídrico" id="toc-interpretación-analítica-matriz-de-perfiles-de-riesgo-hídrico" class="nav-link" data-scroll-target="#interpretación-analítica-matriz-de-perfiles-de-riesgo-hídrico">📊 6. Interpretación Analítica: Matriz de Perfiles de Riesgo Hídrico</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
@@ -102,16 +243,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<div id="27927007" class="cell" data-execution_count="1">
+<div id="6190dbe2" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> altair <span class="im">as</span> alt</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>alt.data_transformers.disable_max_rows()</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">"data/cleaned_data.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
-<div id="5093e027" class="cell" data-execution_count="2">
+<div id="fe6c8c2e" class="cell" data-execution_count="2">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="14">
+</details>
+<div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 
 
@@ -414,9 +561,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="cfa34cef" class="cell" data-execution_count="3">
+<div id="fadac7fe" class="cell" data-execution_count="3">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df.columns</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="15">
+</details>
+<div class="cell-output cell-output-display" data-execution_count="3">
 <pre><code>Index(['string_id', 'aq30_id', 'name_0', 'name_1', 'area_km2', 'bws_score',
        'bwd_score', 'iav_score', 'sev_score', 'drr_score', 'rfr_score',
        'cfr_score', 'ucw_score', 'cep_score', 'udw_score', 'usa_score',
@@ -436,7 +586,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="visualización" class="level2">
 <h2 class="anchored" data-anchor-id="visualización"><strong>Visualización</strong></h2>
-<div id="55bb5991" class="cell" data-execution_count="4">
+<div id="8496eb25" class="cell" data-execution_count="4">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Configuración global de estilo para Altair (Altair 5.5.0+)</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>alt.theme.enable(<span class="st">'fivethirtyeight'</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -460,8 +612,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>cols_industria <span class="op">=</span> [col <span class="cf">for</span> col <span class="kw">in</span> df.columns <span class="cf">if</span> col.startswith(<span class="st">'w_awr_'</span>)]</span>
 <span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>df_prov[<span class="st">'Riesgo_Total'</span>] <span class="op">=</span> df_prov[[<span class="st">'Riesgo_Hidrologico_total'</span>, <span class="st">'Riesgo_Eventos_total'</span>,<span class="st">'Riesgo_Calidad_Agua_total'</span>, <span class="st">'Riesgo_por_Industria_total'</span>]].mean(axis<span class="op">=</span><span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
-<div id="69bd7da3" class="cell" data-execution_count="5">
+<div id="512541c4" class="cell" data-execution_count="5">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> altair <span class="im">as</span> alt</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -572,26 +727,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-108"><a href="#cb6-108" aria-hidden="true" tabindex="-1"></a>).interactive()</span>
 <span id="cb6-109"><a href="#cb6-109" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-110"><a href="#cb6-110" aria-hidden="true" tabindex="-1"></a>grafico_contexto</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="17">
+</details>
+<div class="cell-output cell-output-display" data-execution_count="5">
 
 <style>
-  #altair-viz-260e722073534479b2543953b40947a1.vega-embed {
+  #altair-viz-c4bf057be2264207b62418ffd55b229c.vega-embed {
     width: 100%;
     display: flex;
   }
 
-  #altair-viz-260e722073534479b2543953b40947a1.vega-embed details,
-  #altair-viz-260e722073534479b2543953b40947a1.vega-embed details summary {
+  #altair-viz-c4bf057be2264207b62418ffd55b229c.vega-embed details,
+  #altair-viz-c4bf057be2264207b62418ffd55b229c.vega-embed details summary {
     position: relative;
   }
 </style>
-<div id="altair-viz-260e722073534479b2543953b40947a1"></div>
+<div id="altair-viz-c4bf057be2264207b62418ffd55b229c"></div>
 <script type="text/javascript">
   var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
   (function(spec, embedOpt){
     let outputDiv = document.currentScript.previousElementSibling;
-    if (outputDiv.id !== "altair-viz-260e722073534479b2543953b40947a1") {
-      outputDiv = document.getElementById("altair-viz-260e722073534479b2543953b40947a1");
+    if (outputDiv.id !== "altair-viz-c4bf057be2264207b62418ffd55b229c") {
+      outputDiv = document.getElementById("altair-viz-c4bf057be2264207b62418ffd55b229c");
     }
 
     const paths = {
@@ -643,7 +799,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
 </div>
 </div>
-<div id="7309b87e" class="cell" data-execution_count="6">
+<div id="1191cd1b" class="cell" data-execution_count="6">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> altair <span class="im">as</span> alt</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -738,26 +896,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-92"><a href="#cb7-92" aria-hidden="true" tabindex="-1"></a><span class="co">#.interactive(bind_y=False)</span></span>
 <span id="cb7-93"><a href="#cb7-93" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-94"><a href="#cb7-94" aria-hidden="true" tabindex="-1"></a>grafico_final.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 <div class="cell-output cell-output-display">
 
 <style>
-  #altair-viz-3235dab3473e48c499c7626a1fc47058.vega-embed {
+  #altair-viz-6ca10531033045e88e53846000396da1.vega-embed {
     width: 100%;
     display: flex;
   }
 
-  #altair-viz-3235dab3473e48c499c7626a1fc47058.vega-embed details,
-  #altair-viz-3235dab3473e48c499c7626a1fc47058.vega-embed details summary {
+  #altair-viz-6ca10531033045e88e53846000396da1.vega-embed details,
+  #altair-viz-6ca10531033045e88e53846000396da1.vega-embed details summary {
     position: relative;
   }
 </style>
-<div id="altair-viz-3235dab3473e48c499c7626a1fc47058"></div>
+<div id="altair-viz-6ca10531033045e88e53846000396da1"></div>
 <script type="text/javascript">
   var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
   (function(spec, embedOpt){
     let outputDiv = document.currentScript.previousElementSibling;
-    if (outputDiv.id !== "altair-viz-3235dab3473e48c499c7626a1fc47058") {
-      outputDiv = document.getElementById("altair-viz-3235dab3473e48c499c7626a1fc47058");
+    if (outputDiv.id !== "altair-viz-6ca10531033045e88e53846000396da1") {
+      outputDiv = document.getElementById("altair-viz-6ca10531033045e88e53846000396da1");
     }
 
     const paths = {
@@ -834,7 +993,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="visualización-1" class="level2">
 <h2 class="anchored" data-anchor-id="visualización-1"><strong>Visualización</strong></h2>
-<div id="99e46f02" class="cell" data-execution_count="7">
+<div id="40ab993a" class="cell" data-execution_count="7">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. Visualización Interactiva con Filtro Base Cero</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1031,26 +1192,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-194"><a href="#cb8-194" aria-hidden="true" tabindex="-1"></a><span class="co"># Mostrar gráfico</span></span>
 <span id="cb8-195"><a href="#cb8-195" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-196"><a href="#cb8-196" aria-hidden="true" tabindex="-1"></a>bars_hidro</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="19">
+</details>
+<div class="cell-output cell-output-display" data-execution_count="7">
 
 <style>
-  #altair-viz-b5decacf138c4b27bfe7adc56cbdee63.vega-embed {
+  #altair-viz-356ef372419141fd91bfdfc5bb6b9d53.vega-embed {
     width: 100%;
     display: flex;
   }
 
-  #altair-viz-b5decacf138c4b27bfe7adc56cbdee63.vega-embed details,
-  #altair-viz-b5decacf138c4b27bfe7adc56cbdee63.vega-embed details summary {
+  #altair-viz-356ef372419141fd91bfdfc5bb6b9d53.vega-embed details,
+  #altair-viz-356ef372419141fd91bfdfc5bb6b9d53.vega-embed details summary {
     position: relative;
   }
 </style>
-<div id="altair-viz-b5decacf138c4b27bfe7adc56cbdee63"></div>
+<div id="altair-viz-356ef372419141fd91bfdfc5bb6b9d53"></div>
 <script type="text/javascript">
   var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
   (function(spec, embedOpt){
     let outputDiv = document.currentScript.previousElementSibling;
-    if (outputDiv.id !== "altair-viz-b5decacf138c4b27bfe7adc56cbdee63") {
-      outputDiv = document.getElementById("altair-viz-b5decacf138c4b27bfe7adc56cbdee63");
+    if (outputDiv.id !== "altair-viz-356ef372419141fd91bfdfc5bb6b9d53") {
+      outputDiv = document.getElementById("altair-viz-356ef372419141fd91bfdfc5bb6b9d53");
     }
 
     const paths = {
@@ -1125,7 +1287,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="visualización-2" class="level2">
 <h2 class="anchored" data-anchor-id="visualización-2"><strong>Visualización</strong></h2>
-<div id="69d25801" class="cell" data-execution_count="8">
+<div id="0e7c1685" class="cell" data-execution_count="8">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># =========================================================================</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># --- CELDA ACTUALIZADA: Dumbbell Plot (Fluvial vs Costera) ---</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># =========================================================================</span></span>
@@ -1188,26 +1352,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb9-60"><a href="#cb9-60" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-61"><a href="#cb9-61" aria-hidden="true" tabindex="-1"></a><span class="co"># Mostrar gráfico</span></span>
 <span id="cb9-62"><a href="#cb9-62" aria-hidden="true" tabindex="-1"></a>dumbbell</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="20">
+</details>
+<div class="cell-output cell-output-display" data-execution_count="8">
 
 <style>
-  #altair-viz-3ef3593a62f14b1cbb921072610b4992.vega-embed {
+  #altair-viz-390bf9ee4fbe4813869518e63863f1b7.vega-embed {
     width: 100%;
     display: flex;
   }
 
-  #altair-viz-3ef3593a62f14b1cbb921072610b4992.vega-embed details,
-  #altair-viz-3ef3593a62f14b1cbb921072610b4992.vega-embed details summary {
+  #altair-viz-390bf9ee4fbe4813869518e63863f1b7.vega-embed details,
+  #altair-viz-390bf9ee4fbe4813869518e63863f1b7.vega-embed details summary {
     position: relative;
   }
 </style>
-<div id="altair-viz-3ef3593a62f14b1cbb921072610b4992"></div>
+<div id="altair-viz-390bf9ee4fbe4813869518e63863f1b7"></div>
 <script type="text/javascript">
   var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
   (function(spec, embedOpt){
     let outputDiv = document.currentScript.previousElementSibling;
-    if (outputDiv.id !== "altair-viz-3ef3593a62f14b1cbb921072610b4992") {
-      outputDiv = document.getElementById("altair-viz-3ef3593a62f14b1cbb921072610b4992");
+    if (outputDiv.id !== "altair-viz-390bf9ee4fbe4813869518e63863f1b7") {
+      outputDiv = document.getElementById("altair-viz-390bf9ee4fbe4813869518e63863f1b7");
     }
 
     const paths = {
@@ -1289,7 +1454,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="visualización-3" class="level2">
 <h2 class="anchored" data-anchor-id="visualización-3"><strong>Visualización</strong></h2>
-<div id="9a97017f" class="cell" data-execution_count="9">
+<div id="342deacf" class="cell" data-execution_count="9">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> altair <span class="im">as</span> alt</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1402,34 +1569,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb10-110"><a href="#cb10-110" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-111"><a href="#cb10-111" aria-hidden="true" tabindex="-1"></a><span class="co"># Renderizado directo para VS Code (Jupyter)</span></span>
 <span id="cb10-112"><a href="#cb10-112" aria-hidden="true" tabindex="-1"></a>grafico_calidad</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 <div class="cell-output cell-output-stderr">
-<pre><code>C:\Users\User\AppData\Local\Temp\ipykernel_35172\41291666.py:67: AltairDeprecationWarning: 
+<pre><code>C:\Users\zevBetaUltra7\AppData\Local\Temp\ipykernel_148488\41291666.py:67: AltairDeprecationWarning: 
 Deprecated since `altair=5.0.0`. Use selection_point instead.
   seleccion_region = alt.selection_single(fields=['Region'], bind=dropdown_regiones, name="Filtro")
-C:\Users\User\AppData\Local\Temp\ipykernel_35172\41291666.py:105: AltairDeprecationWarning: 
+C:\Users\zevBetaUltra7\AppData\Local\Temp\ipykernel_148488\41291666.py:105: AltairDeprecationWarning: 
 Deprecated since `altair=5.0.0`. Use add_params instead.
   ).add_selection( # CORRECCIÓN CLAVE: add_selection es el método seguro en versiones anteriores</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="21">
+<div class="cell-output cell-output-display" data-execution_count="9">
 
 <style>
-  #altair-viz-8c98b8e0ddd14c60afba3daee54d7a91.vega-embed {
+  #altair-viz-7fea3748f1af4162b05f06bf8ba65192.vega-embed {
     width: 100%;
     display: flex;
   }
 
-  #altair-viz-8c98b8e0ddd14c60afba3daee54d7a91.vega-embed details,
-  #altair-viz-8c98b8e0ddd14c60afba3daee54d7a91.vega-embed details summary {
+  #altair-viz-7fea3748f1af4162b05f06bf8ba65192.vega-embed details,
+  #altair-viz-7fea3748f1af4162b05f06bf8ba65192.vega-embed details summary {
     position: relative;
   }
 </style>
-<div id="altair-viz-8c98b8e0ddd14c60afba3daee54d7a91"></div>
+<div id="altair-viz-7fea3748f1af4162b05f06bf8ba65192"></div>
 <script type="text/javascript">
   var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
   (function(spec, embedOpt){
     let outputDiv = document.currentScript.previousElementSibling;
-    if (outputDiv.id !== "altair-viz-8c98b8e0ddd14c60afba3daee54d7a91") {
-      outputDiv = document.getElementById("altair-viz-8c98b8e0ddd14c60afba3daee54d7a91");
+    if (outputDiv.id !== "altair-viz-7fea3748f1af4162b05f06bf8ba65192") {
+      outputDiv = document.getElementById("altair-viz-7fea3748f1af4162b05f06bf8ba65192");
     }
 
     const paths = {
@@ -1504,7 +1672,9 @@ Deprecated since `altair=5.0.0`. Use add_params instead.
 </section>
 <section id="visualización-4" class="level2">
 <h2 class="anchored" data-anchor-id="visualización-4"><strong>Visualización</strong></h2>
-<div id="e4bc4fa5" class="cell" data-execution_count="10">
+<div id="3e5936d0" class="cell" data-execution_count="10">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> altair <span class="im">as</span> alt</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1552,26 +1722,27 @@ Deprecated since `altair=5.0.0`. Use add_params instead.
 <span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-47"><a href="#cb12-47" aria-hidden="true" tabindex="-1"></a>heatmap</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="22">
+</details>
+<div class="cell-output cell-output-display" data-execution_count="10">
 
 <style>
-  #altair-viz-8d427cfdf6194a8cb715022f9b28e5e9.vega-embed {
+  #altair-viz-7057c7adde58467b9fcec1db2b6762e6.vega-embed {
     width: 100%;
     display: flex;
   }
 
-  #altair-viz-8d427cfdf6194a8cb715022f9b28e5e9.vega-embed details,
-  #altair-viz-8d427cfdf6194a8cb715022f9b28e5e9.vega-embed details summary {
+  #altair-viz-7057c7adde58467b9fcec1db2b6762e6.vega-embed details,
+  #altair-viz-7057c7adde58467b9fcec1db2b6762e6.vega-embed details summary {
     position: relative;
   }
 </style>
-<div id="altair-viz-8d427cfdf6194a8cb715022f9b28e5e9"></div>
+<div id="altair-viz-7057c7adde58467b9fcec1db2b6762e6"></div>
 <script type="text/javascript">
   var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
   (function(spec, embedOpt){
     let outputDiv = document.currentScript.previousElementSibling;
-    if (outputDiv.id !== "altair-viz-8d427cfdf6194a8cb715022f9b28e5e9") {
-      outputDiv = document.getElementById("altair-viz-8d427cfdf6194a8cb715022f9b28e5e9");
+    if (outputDiv.id !== "altair-viz-7057c7adde58467b9fcec1db2b6762e6") {
+      outputDiv = document.getElementById("altair-viz-7057c7adde58467b9fcec1db2b6762e6");
     }
 
     const paths = {
@@ -1643,9 +1814,12 @@ Deprecated since `altair=5.0.0`. Use add_params instead.
 </section>
 <section id="visualización-5" class="level2">
 <h2 class="anchored" data-anchor-id="visualización-5"><strong>Visualización</strong></h2>
-<div id="b20170fd" class="cell" data-execution_count="11">
+<div id="2af31842" class="cell" data-execution_count="11">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>df.columns</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="23">
+</details>
+<div class="cell-output cell-output-display" data-execution_count="11">
 <pre><code>Index(['string_id', 'aq30_id', 'name_0', 'name_1', 'area_km2', 'bws_score',
        'bwd_score', 'iav_score', 'sev_score', 'drr_score', 'rfr_score',
        'cfr_score', 'ucw_score', 'cep_score', 'udw_score', 'usa_score',
@@ -1657,7 +1831,9 @@ Deprecated since `altair=5.0.0`. Use add_params instead.
       dtype='str')</code></pre>
 </div>
 </div>
-<div id="defaacb6" class="cell" data-execution_count="12">
+<div id="6b593865" class="cell" data-execution_count="12">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> altair <span class="im">as</span> alt</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1749,26 +1925,27 @@ Deprecated since `altair=5.0.0`. Use add_params instead.
 <span id="cb15-89"><a href="#cb15-89" aria-hidden="true" tabindex="-1"></a>).interactive()</span>
 <span id="cb15-90"><a href="#cb15-90" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-91"><a href="#cb15-91" aria-hidden="true" tabindex="-1"></a>grafico_final.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 <div class="cell-output cell-output-display">
 
 <style>
-  #altair-viz-38f78fc1db7f4303bf022658791837c1.vega-embed {
+  #altair-viz-daf03f5af54348da8c4f1edde400e4e4.vega-embed {
     width: 100%;
     display: flex;
   }
 
-  #altair-viz-38f78fc1db7f4303bf022658791837c1.vega-embed details,
-  #altair-viz-38f78fc1db7f4303bf022658791837c1.vega-embed details summary {
+  #altair-viz-daf03f5af54348da8c4f1edde400e4e4.vega-embed details,
+  #altair-viz-daf03f5af54348da8c4f1edde400e4e4.vega-embed details summary {
     position: relative;
   }
 </style>
-<div id="altair-viz-38f78fc1db7f4303bf022658791837c1"></div>
+<div id="altair-viz-daf03f5af54348da8c4f1edde400e4e4"></div>
 <script type="text/javascript">
   var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
   (function(spec, embedOpt){
     let outputDiv = document.currentScript.previousElementSibling;
-    if (outputDiv.id !== "altair-viz-38f78fc1db7f4303bf022658791837c1") {
-      outputDiv = document.getElementById("altair-viz-38f78fc1db7f4303bf022658791837c1");
+    if (outputDiv.id !== "altair-viz-daf03f5af54348da8c4f1edde400e4e4") {
+      outputDiv = document.getElementById("altair-viz-daf03f5af54348da8c4f1edde400e4e4");
     }
 
     const paths = {
@@ -1828,12 +2005,13 @@ Deprecated since `altair=5.0.0`. Use add_params instead.
 <p>El cruce de variables (riesgo hidrológico vs.&nbsp;calidad del agua) segmentado por las medianas nacionales revela lo siguiente:</p>
 <p><strong>1. ¿Qué provincias presentan simultáneamente altos scores en varias dimensiones del riesgo hídrico?</strong> Las provincias ubicadas en el <strong>Cuadrante Crítico (Superior Derecho)</strong> enfrentan una crisis multidimensional: * <strong>Loja, El Oro, Cañar y Azuay:</strong> Superan la mediana nacional tanto en escasez de agua (eje X) como en déficit sanitario (eje Y). Además, el tamaño y color de sus burbujas alertan sobre una alta vulnerabilidad ante eventos climáticos extremos (inundaciones/sequías) y una fuerte presión por la demanda industrial/agrícola.</p>
 <p><strong>2. ¿Qué perfiles territoriales pueden identificarse a partir de la combinación de indicadores?</strong> El gráfico define cuatro arquetipos claros de riesgo en el país: * <strong>Perfil 1: Estrés Total (Cuadrante Superior Derecho):</strong> Crisis concurrente de cantidad y calidad (ej. Loja, Manabí). <em>Acciones:</em> Intervenciones de emergencia multidimensionales (embalses + plantas de tratamiento). * <strong>Perfil 2: Abundancia Contaminada (Cuadrante Superior Izquierdo):</strong> El bloque Amazónico (Napo, Sucumbíos). Tienen el menor riesgo de escasez (agua abundante), pero los peores índices de calidad. <em>Acciones:</em> Urgencia absoluta en infraestructura de potabilización y saneamiento, no en captación. * <strong>Perfil 3: Tensión Demográfica/Productiva (Cuadrante Inferior Derecho):</strong> Ejes económicos como Pichincha y Guayas. Calidad de agua moderada, pero alta presión sobre la cantidad por densidad poblacional y corporativa. <em>Acciones:</em> Políticas de eficiencia, reducción de fugas y reciclaje industrial. * <strong>Perfil 4: Estabilidad Relativa (Cuadrante Inferior Izquierdo):</strong> Zonas andinas centrales (ej. Tungurahua, Chimborazo). Sus métricas operan por debajo de la mediana de riesgo nacional. <em>Acciones:</em> Conservación y protección preventiva de cuencas.</p>
+
+
 </section>
 </section>
 </section>
 
-</main>
-<!-- /main column -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

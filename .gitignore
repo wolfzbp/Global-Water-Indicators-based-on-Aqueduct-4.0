@@ -1,0 +1,4 @@
+data/cleaned_data_long_format.csv
+*.csv
+/.quarto/
+**/*.quarto_ipynb
