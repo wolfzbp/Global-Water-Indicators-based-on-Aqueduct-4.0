@@ -1,0 +1,950 @@
+---
+title: '**0. Carga de datos**'
+jupyter: python3
+---
+
+
+
+```{python}
+import pandas as pd
+import altair as alt
+import numpy as np
+alt.data_transformers.disable_max_rows()
+df = pd.read_csv("data/cleaned_data.csv")
+```
+
+```{python}
+df
+```
+
+```{python}
+df.columns
+```
+
+# **1. Ecuador en el contexto global del estrés hídrico**
+
+## **Contexto de la pregunta analítica**
+
+Para comprender la magnitud del reto hídrico en Ecuador, analizamos su posición dentro de la distribución mundial. El siguiente gráfico muestra el **Estrés Hídrico Base (Baseline Water Stress)** ponderado por área de todos los países, agrupados por continente. Esta vista panorámica permite contrastar la realidad ecuatoriana no solo a nivel global, sino frente al comportamiento de Sudamérica.
+
+## **Visualización**
+
+```{python}
+# Configuración global de estilo para Altair (Altair 5.5.0+)
+alt.theme.enable('fivethirtyeight')
+
+# 2. Función de promedio ponderado
+def w_avg(df, values_cols, weight_col):
+    d = df[values_cols]
+    w = df[weight_col]
+    return (d.multiply(w, axis=0).sum(axis=0)) / w.sum()
+
+# 3. Agrupación provincial
+cols_riesgo = [col for col in df.columns if col.endswith('_score') or col.endswith('_total')]
+df_prov = df.groupby('name_1').apply(lambda x: w_avg(x, cols_riesgo, 'area_km2')).reset_index()
+
+# 4. Dimensiones macro
+cols_hidro = ['bws_score', 'bwd_score', 'iav_score', 'sev_score', 'drr_score']
+
+cols_eventos = ['rfr_score', 'cfr_score']
+
+cols_calidad = ['ucw_score', 'cep_score', 'udw_score', 'usa_score']
+
+cols_industria = [col for col in df.columns if col.startswith('w_awr_')]
+
+df_prov['Riesgo_Total'] = df_prov[['Riesgo_Hidrologico_total', 'Riesgo_Eventos_total','Riesgo_Calidad_Agua_total', 'Riesgo_por_Industria_total']].mean(axis=1)
+```
+
+```{python}
+import pandas as pd
+import altair as alt
+import numpy as np
+
+# Configuración global
+alt.theme.enable('fivethirtyeight')
+
+# 1. Cargar el dataset global
+df_global = pd.read_csv("data/cleaned_data_long_format.csv")
+
+# 2. Filtrar únicamente el indicador de Estrés Hídrico Base
+df_bws = df_global[df_global['score'] == 'bws_score'].copy()
+
+# 3. Función de promedio ponderado global
+def w_avg_global(df, val_col, weight_col):
+    if df[weight_col].sum() == 0: 
+        return 0
+    return (df[val_col] * df[weight_col]).sum() / df[weight_col].sum()
+
+# 4. Agrupar la data para calcular el score final de cada PAÍS del mundo
+df_paises = df_bws.groupby(['name_0', 'continent']).apply(
+    lambda x: w_avg_global(x, 'value', 'area_km2')
+).reset_index(name='Estres_Hidrico')
+
+df_paises['continent'] = df_paises['continent'].replace({'South America': 'Sudamérica', 'North America': 'Norteamérica'})
+
+# Crear 'Jitter' (ruido vertical) para evitar solapamiento
+np.random.seed(42)
+df_paises['jitter'] = np.random.uniform(-0.0, 0.0, len(df_paises))
+
+# 5. Construcción de la Visualización
+base = alt.Chart(df_paises).encode(
+    x=alt.X('Estres_Hidrico:Q', title='Estrés Hídrico Base (0-5)', scale=alt.Scale(domain=[-0.2, 5.2])),
+    y=alt.Y('continent:N', title='Continente', sort='ascending', axis=alt.Axis(grid=True, labelFontSize=12))
+)
+
+# Capa 1: Puntos
+puntos = base.mark_circle(stroke='white', strokeWidth=0.5).encode(
+    yOffset='jitter:Q', 
+    
+    # ---------------------------------------------------------
+    # LA MAGIA ARQUITECTÓNICA: Condición con Escala
+    # Si es Ecuador -> Rojo Intenso. Si NO -> Color por Continente (paleta set2)
+    # ---------------------------------------------------------
+    color=alt.condition(
+        alt.datum.name_0 == 'Ecuador',
+        alt.value('#cc0000'),  # Valor fijo para Ecuador (Rojo Intenso)
+        alt.Color('continent:N', scale=alt.Scale(scheme='set2'), legend=None) # Escala de colores para el resto
+    ),
+    
+    size=alt.condition(
+        alt.datum.name_0 == 'Ecuador',
+        alt.value(300),          # Hacemos a Ecuador aún más grande para que domine
+        alt.value(70)
+    ),
+    opacity=alt.condition(
+        alt.datum.name_0 == 'Ecuador',
+        alt.value(1.0),          # Ecuador sólido
+        alt.value(0.7)           # Resto de países ligeramente transparentes
+    ),
+    tooltip=[
+        alt.Tooltip('name_0:N', title='País'),
+        alt.Tooltip('continent:N', title='Continente'),
+        alt.Tooltip('Estres_Hidrico:Q', title='Estrés Hídrico', format='.2f')
+    ]
+)
+
+# Capa 2: Etiqueta de Ecuador
+texto_ecuador = base.mark_text(
+    align='left', 
+    baseline='middle', 
+    dx=14,           
+    fontSize=13, 
+    fontWeight='bold', 
+    color='#cc0000' # Mismo color que el punto
+).transform_filter(
+    alt.datum.name_0 == 'Ecuador'
+).encode(
+    yOffset='jitter:Q', 
+    text='name_0:N'
+)
+
+# Capa 3: Línea y etiqueta de promedio mundial
+promedio_mundial = df_paises['Estres_Hidrico'].mean()
+
+linea_promedio = alt.Chart(pd.DataFrame({'x': [promedio_mundial]})).mark_rule(
+    strokeDash=[5, 5], color='#4A4A4A', strokeWidth=1.5
+).encode(x='x:Q')
+
+texto_promedio = alt.Chart(pd.DataFrame({'x': [promedio_mundial]})).mark_text(
+    align='left', baseline='bottom', dx=5, dy=-5, 
+    text='Promedio Mundial', color='#4A4A4A', fontSize=11, fontWeight='bold'
+).encode(
+    x='x:Q', 
+    y=alt.value(0) 
+)
+
+# Ensamblaje final
+grafico_contexto = (puntos + texto_ecuador + linea_promedio + texto_promedio).properties(
+    title=alt.TitleParams(
+        text='Posicionamiento Global del Estrés Hídrico',
+        subtitle='Cada punto representa un país.',
+        color='#333333',
+        dy=-10
+    ),
+    width=650, 
+    height=350
+).interactive()
+
+grafico_contexto
+```
+
+```{python}
+import pandas as pd
+import altair as alt
+import numpy as np
+
+# Configuración global
+alt.theme.enable('fivethirtyeight')
+
+# 1. Asumiendo que df_bws ya está cargado y filtrado
+# df_bws = df_global[df_global['score'] == 'bws_score'].copy()
+
+def w_avg_global(df, val_col, weight_col):
+    if df[weight_col].sum() == 0: return 0
+    return (df[val_col] * df[weight_col]).sum() / df[weight_col].sum()
+
+# 2. Agrupación y cálculo del Promedio Mundial
+df_paises = df_bws.groupby(['name_0', 'continent']).apply(
+    lambda x: w_avg_global(x, 'value', 'area_km2')
+).reset_index(name='Estres_Hidrico')
+
+df_paises['continent'] = df_paises['continent'].replace({'South America': 'Sudamérica', 'North America': 'Norteamérica'})
+
+promedio_mundial = (df_bws['value'] * df_bws['area_km2']).sum() / df_bws['area_km2'].sum()
+df_paises['prom_mundial'] = promedio_mundial
+
+# 3. Jitter para los puntos
+np.random.seed(42)
+df_paises['jitter'] = np.random.uniform(0, 0.4, len(df_paises))
+
+# --- CAPAS DEL RAINCLOUD ---
+
+# Capa 1: NUBE (Densidad)
+cloud = alt.Chart().transform_density(
+    density='Estres_Hidrico', groupby=['continent'], steps=200, extent=[-0.2, 5.2], as_=['Estres_Hidrico', 'density']
+).mark_area(orient='vertical', opacity=0.3).encode(
+    x=alt.X('Estres_Hidrico:Q', title='Estrés Hídrico Base (0 = Bajo, 5 = Extremo)', scale=alt.Scale(domain=[-0.2, 5.2])),
+    y=alt.Y('density:Q', title=None, axis=None, scale=alt.Scale(range=[30, 0])), 
+    color=alt.Color('continent:N', legend=None, scale=alt.Scale(scheme='set2'))
+)
+
+# Capa 2: PARAGUAS (Boxplot). Se ubica en una posición vertical fija (y=35) entre la nube y la lluvia
+umbrella = alt.Chart().mark_boxplot(
+    size=12, color='#333333', opacity=0.7, outliers=False # Ocultamos outliers porque ya se verán en la lluvia
+).encode(
+    x='Estres_Hidrico:Q',
+    y=alt.value(35) # Posición vertical fija
+)
+
+# Capa 3: LLUVIA (Puntos)
+rain = alt.Chart().mark_circle(stroke='white', strokeWidth=0.5).encode(
+    x='Estres_Hidrico:Q',
+    y=alt.Y('jitter:Q', title=None, axis=None, scale=alt.Scale(range=[45, 65])),
+    color=alt.condition(
+        alt.datum.name_0 == 'Ecuador', alt.value('#cc0000'), alt.Color('continent:N', scale=alt.Scale(scheme='set2'), legend=None)
+    ),
+    size=alt.condition(alt.datum.name_0 == 'Ecuador', alt.value(200), alt.value(50)),
+    opacity=alt.condition(alt.datum.name_0 == 'Ecuador', alt.value(1.0), alt.value(0.6)),
+    tooltip=[alt.Tooltip('name_0:N', title='País'), alt.Tooltip('Estres_Hidrico:Q', title='Score', format='.2f')]
+)
+
+# Capa 4: Etiqueta Ecuador
+texto_ecuador = alt.Chart().mark_text(
+    align='left', baseline='middle', dx=10, dy=0, fontSize=13, fontWeight='bold', color='#cc0000'
+).transform_filter(alt.datum.name_0 == 'Ecuador').encode(
+    x='Estres_Hidrico:Q', y=alt.Y('jitter:Q', scale=alt.Scale(range=[45, 65])), text='name_0:N'
+)
+
+# Capa 5 y 6: Promedio Mundial y su Etiqueta
+linea_promedio = alt.Chart().mark_rule(strokeDash=[5, 5], color='#4A4A4A', strokeWidth=1.5).encode(x='prom_mundial:Q')
+
+texto_promedio = alt.Chart().mark_text(
+    align='left', baseline='bottom', dx=5, dy=-15, color='#4A4A4A', fontSize=11, fontWeight='bold'
+).transform_aggregate(
+    prom_mundial='min(prom_mundial)', groupby=['continent']
+).encode(
+    x='prom_mundial:Q', y=alt.value(0), text=alt.Text('prom_mundial:Q', format='.2f')
+)
+
+# Ensamblaje con Facet
+grafico_final = alt.layer(
+    cloud, umbrella, rain, texto_ecuador, linea_promedio, texto_promedio, data=df_paises
+).properties(
+    width=650, height=80 
+).facet(
+    row=alt.Row('continent:N', title=None, sort='ascending', header=alt.Header(labelAngle=0, labelAlign='left', labelFontSize=13, labelFontWeight='bold'))
+).properties(
+    title=alt.TitleParams(
+        text='Ecuador en el Contexto Global del Estrés Hídrico',
+        subtitle=['Cada punto es un país. La "nube" muestra dónde se concentra la mayoría.', 'La caja negra indica el rango donde está el 50% de los países de cada continente.'],
+        color='#333333', dy=-10
+    )
+).resolve_scale(y='independent')
+#.interactive(bind_y=False)
+
+grafico_final.show()
+```
+
+## **Interpretación**
+
+### 📊 1. Interpretación Analítica: Ecuador en el contexto global del estrés hídrico
+
+Esta visualización parte de un Un **Strip Plot** (o gráfico de franjas), un tipo de gráfico estadístico que representa la distribución de datos numéricos individuales como puntos a lo largo de un eje. Posteriomente se desarrolla como un **Raincloud Plot** (Gráfico de Nube de Lluvia), una técnica analítica avanzada que ofrece una perspectiva superior al clásico *Boxplot*. Permite observar simultáneamente la densidad de probabilidad (KDE), los estadísticos de resumen (caja) y la distribución real de los puntos geográficos (scatter).
+
+**Insights:**
+
+* **La posición de Ecuador:** La línea punteada roja sitúa a Ecuador en el extremo izquierdo de la escala (aproximadamente < 0.5 en un rango de 0 a 5). A nivel macro, esto indica que el país goza de un **Estrés Hídrico Base (BWS) extremadamente bajo**. La disponibilidad natural de agua dulce supera de manera holgada a la demanda agregada en la mayor parte de su territorio.
+* **El perfil de Sudamérica:** La distribución de la región presenta una fuerte asimetría hacia la derecha (sesgo positivo). La "nube" principal de datos se concentra cerca del 0, fuertemente influenciada por la cuenca amazónica y los Andes. Sin embargo, la cola extendida revela zonas específicas con estrés alto crónico (como el norte de Chile). Ecuador se encuentra cómodamente alineado con la moda estadística de su continente.
+* **Contraste Global:** Al observar Asia y África, se evidencian distribuciones mucho más uniformes o incluso bimodales, revelando enormes extensiones territoriales que sufren de estrés hídrico crítico (valores entre 4 y 5). Frente a este panorama mundial, Ecuador representa un "oasis" comparativo en términos de disponibilidad base de agua.
+
+* _**Nota:** El hecho de que el "Estrés Base" sea bajo no significa que Ecuador no tenga problemas de agua. Muchas veces, los verdaderos riesgos están en la variabilidad interanual (iav_score) o en el riesgo de eventos extremos como inundaciones y sequías, fenómenos muy relevantes en la geografía andina y costera._
+
+# **2. Riesgo hidrológico por provincia**
+
+## **Contexto de la pregunta analítica**
+
+El análisis previo demostró que, a nivel global, Ecuador posee un estrés hídrico base muy bajo. Sin embargo, el "Riesgo Hidrológico" es un constructo multidimensional. Plantearnos qué provincias tienen mayor riesgo y qué indicadores lo impulsan nos permite pasar de una estadística descriptiva general a una **analítica prescriptiva**. Esto es fundamental para la asignación de recursos públicos, diseño de políticas de infraestructura y mitigación de desastres focalizados (por ejemplo, saber si una provincia necesita plantas de tratamiento de agua versus muros de contención para inundaciones).
+
+**Preguntas analíticas:**
+- ¿Qué provincias del Ecuador presentan mayores scores de riesgo hidrológico?
+- ¿Qué indicadores hidrológicos destacan más en cada provincia?
+
+## **Visualización**
+
+```{python}
+# 5. Visualización Interactiva con Filtro Base Cero
+import pandas as pd
+
+import altair as alt
+
+import numpy as np
+
+
+
+# Configuración global de Altair
+
+alt.data_transformers.disable_max_rows()
+
+alt.theme.enable('fivethirtyeight')
+
+
+
+# 1. Cargar datos
+
+df = pd.read_csv("data/cleaned_data.csv")
+
+
+
+# --- CORRECCIÓN 1: Filtrar únicamente Ecuador antes de agrupar ---
+
+df_ecuador = df[df['name_0'] == 'Ecuador'].copy()
+
+
+
+# 2. Función de promedio ponderado
+
+def w_avg(df, values_cols, weight_col):
+
+    d = df[values_cols]
+
+    w = df[weight_col]
+
+    return (d.multiply(w, axis=0).sum(axis=0)) / w.sum()
+
+
+
+# 3. Agrupación provincial
+
+cols_riesgo = [col for col in df_ecuador.columns if col.endswith('_score') or col.endswith('_total')]
+
+df_prov = df_ecuador.groupby('name_1').apply(lambda x: w_avg(x, cols_riesgo, 'area_km2')).reset_index()
+
+
+
+# 4. Dimensiones macro
+
+cols_hidro = ['bws_score', 'bwd_score', 'iav_score', 'sev_score', 'drr_score']
+
+cols_eventos = ['rfr_score', 'cfr_score']
+
+cols_calidad = ['ucw_score', 'cep_score', 'udw_score', 'usa_score']
+
+cols_industria = [col for col in df_ecuador.columns if col.startswith('w_awr_')]
+
+
+
+# --- CORRECCIÓN 2: Usar 'df_prov' en lugar de 'df' para calcular el promedio final ---
+
+df_prov['Riesgo_Total'] = df_prov[['Riesgo_Hidrologico_total', 'Riesgo_Eventos_total', 'Riesgo_Calidad_Agua_total', 'Riesgo_por_Industria_total']].mean(axis=1)
+
+
+
+# =========================================================================
+
+# --- CELDA ACTUALIZADA: Gráfico Interactivo con Filtro Base Cero ---
+
+# =========================================================================
+
+
+
+# --- CORRECCIÓN 3: Ajustar el nombre correcto de la columna en 'id_vars' ---
+
+df_hidro_melt = df_prov.melt(
+
+    id_vars=['name_1', 'Riesgo_Hidrologico_total'],
+
+    value_vars=cols_hidro,
+
+    var_name='Indicador',
+
+    value_name='Score'
+
+)
+
+
+
+# Renombrar indicadores para legibilidad
+
+dict_hidro = {
+
+    'bws_score': 'Estrés Base',
+
+    'bwd_score': 'Agotamiento',
+
+    'iav_score': 'Var. Interanual',
+
+    'sev_score': 'Var. Estacional',
+
+    'drr_score': 'Riesgo Sequía'
+
+}
+
+df_hidro_melt['Indicador'] = df_hidro_melt['Indicador'].map(dict_hidro)
+
+
+
+# Lista fija de los indicadores (Truco para que la leyenda no desaparezca al filtrar)
+
+lista_indicadores = list(dict_hidro.values())
+
+
+
+# 1. Parámetro de interacción (bind='legend' mantiene la selección desde la leyenda)
+
+seleccion_indicador = alt.selection_point(fields=['Indicador'], bind='legend')
+
+
+
+# 2. Construir el gráfico
+
+bars_hidro = alt.Chart(df_hidro_melt).mark_bar(
+
+    cornerRadiusEnd=3,
+
+    stroke='white',    
+
+    strokeWidth=0.5
+
+).encode(
+
+    x=alt.X('sum(Score):Q', title='Score Acumulado (0.0 a Base)'),
+
+   
+
+    # El sort se recalculará dinámicamente según el filtro aplicado
+
+    y=alt.Y('name_1:N', sort=alt.EncodingSortField(field='Score', op='sum', order='descending'), title='Provincia'),
+
+   
+
+    # IMPORTANTE: Definimos el 'domain' explícitamente dentro de Scale
+
+    color=alt.Color('Indicador:N',
+
+                    scale=alt.Scale(scheme='reds', domain=lista_indicadores),
+
+                    legend=alt.Legend(title="Indicador (Clic para filtrar)", symbolType='circle')),
+
+   
+
+    tooltip=[
+
+        alt.Tooltip('name_1:N', title='Provincia'),
+
+        alt.Tooltip('Indicador:N', title='Sub-indicador'),
+
+        alt.Tooltip('Score:Q', title='Score', format='.2f')
+
+    ]
+
+).properties(
+
+    title=alt.TitleParams(
+
+        text='Composición del Riesgo Hidrológico por Provincia',
+
+        subtitle='Interactividad: Haz clic en la leyenda para filtrar. Las barras se apilarán desde cero.',
+
+        color='#333333'
+
+    ),
+
+    width=650,
+
+    height=500
+
+).add_params(
+
+    seleccion_indicador
+
+).transform_filter(
+
+    seleccion_indicador
+
+).interactive()
+
+
+
+# Mostrar gráfico
+
+bars_hidro
+```
+
+## **Interpretación**
+
+### 📊 2. Interpretación Analíticas
+El desglose del riesgo hidrológico revela que la vulnerabilidad hídrica en Ecuador es un fenómeno multidimensional y altamente focalizado geográficamente. Al pasar de una vista global a una provincial, podemos extraer los siguientes hallazgos prescriptivos:
+
+**1. ¿Qué provincias del Ecuador presentan mayores scores de riesgo hidrológico?**
+A nivel nacional, el riesgo no se distribuye de manera uniforme. Las provincias con mayor criticidad se concentran en la región Litoral y el sur de la región Interandina:
+* **Loja (Sierra):** Lidera el ranking nacional con el score acumulado más alto de todo el país (aprox. 11.04), convirtiéndose en el principal foco de atención.
+* **El bloque de la Costa:** Provincias como **El Oro, Santa Elena, Manabí y Guayas** ocupan los siguientes lugares de mayor riesgo, dominando el perfil de vulnerabilidad de la región litoral.
+* **Contraste Amazónico:** En el extremo opuesto, la región de la Amazonía (provincias como Napo, Orellana o Sucumbíos) presenta los niveles mínimos de riesgo hidrológico, actuando como la gran reserva estable del país.
+
+**2. ¿Qué indicadores hidrológicos destacan más en cada provincia?**
+Al descomponer las barras, descubrimos que el principal desafío de las provincias más críticas **no es la escasez absoluta o constante de agua** (*Estrés Base*), sino la alta **inestabilidad climática**:
+* **El caso de Loja:** Su posición número uno está impulsada casi en su totalidad por la **Variabilidad Interanual** (cambios drásticos de disponibilidad de agua de un año a otro) y el **Riesgo de Sequía**.
+
+# **3. Eventos hidrológicos**
+
+## **Contexto de la pregunta analítica**
+
+### 📊 3. Interpretación Analítica: Análisis Bivariado de Riesgo de Inundaciones
+
+**Contexto Analítico:**
+Mientras que la visualización anterior nos mostraba el riesgo acumulado, este gráfico de dispersión (*scatter plot*) nos permite realizar un **análisis bivariado**. Entender la interacción entre el riesgo fluvial (ríos) y el riesgo costero (océano) es vital para la planificación de políticas públicas y presupuestos. Desde una perspectiva de ingeniería, las obras de mitigación son diametralmente distintas: no es lo mismo invertir en dragado de ríos y muros de contención (fluvial) que en conservación de manglares y rompeolas (costero).
+
+**Preguntas analíticas:**
+- ¿Qué provincias presentan mayores scores asociados a inundaciones fluviales y costeras?
+- ¿Existen diferencias claras entre provincias en la exposición a estos eventos?
+
+## **Visualización**
+
+```{python}
+# =========================================================================
+# --- CELDA ACTUALIZADA: Dumbbell Plot (Fluvial vs Costera) ---
+# =========================================================================
+
+# 1. Melt: Añadimos 'Riesgo_Eventos_total' a id_vars para usarlo como criterio de orden
+df_eventos_melt = df_prov.melt(
+    id_vars=['name_1', 'Riesgo_Eventos_total'], 
+    value_vars=['rfr_score', 'cfr_score'], 
+    var_name='Tipo_Inundacion', 
+    value_name='Score'
+)
+
+# 2. Renombrar para legibilidad en la visualización
+df_eventos_melt['Tipo_Inundacion'] = df_eventos_melt['Tipo_Inundacion'].replace({
+    'rfr_score': 'Fluvial (Ríos)', 
+    'cfr_score': 'Costera'
+})
+
+# 3. Construcción del Dumbbell Plot
+# CAPA 1: La línea que conecta los puntos (la "barra" de la pesa)
+rule = alt.Chart(df_eventos_melt).mark_rule(color='#c0c0c0', strokeWidth=2.5).encode(
+    x=alt.X('min(Score):Q', title='Score de Riesgo (0-5)', scale=alt.Scale(domain=[0, 5])),
+    x2=alt.X2('max(Score):Q'),
+    
+    # Ordenamos el Eje Y basándonos en el Riesgo Total de Eventos (descendente)
+    y=alt.Y('name_1:N', 
+            sort=alt.EncodingSortField(field='Riesgo_Eventos_total', op='max', order='descending'), 
+            title='Provincia', 
+            axis=alt.Axis(grid=True)) # Añadimos grid horizontal para guiar el ojo
+)
+
+# CAPA 2: Los puntos (las "pesas")
+points = alt.Chart(df_eventos_melt).mark_circle(size=180, opacity=1).encode(
+    x=alt.X('Score:Q'),
+    y=alt.Y('name_1:N', sort=alt.EncodingSortField(field='name_1', op='max', order='descending')),
+    
+    color=alt.Color('Tipo_Inundacion:N', 
+                    scale=alt.Scale(domain=['Fluvial (Ríos)', 'Costera'], range=['#1f77b4', '#ff7f0e']),
+                    legend=alt.Legend(title="Tipo de Inundación", orient='top-right', fillColor='white', padding=10)),
+    
+    tooltip=[
+        alt.Tooltip('name_1:N', title='Provincia'),
+        alt.Tooltip('Tipo_Inundacion:N', title='Tipo de Inundación'),
+        alt.Tooltip('Score:Q', title='Score Específico', format='.2f'),
+        # Al incluir el total en el tooltip, damos más contexto al usuario
+        alt.Tooltip('Riesgo_Eventos_total:Q', title='Riesgo Total de Eventos', format='.2f') 
+    ]
+)
+
+# Ensamblaje final
+dumbbell = (rule + points).properties(
+    title=alt.TitleParams(
+        text='Brecha de Riesgo: Inundaciones Fluviales vs. Costeras',
+        subtitle='Provincias ordenadas por su exposición total a eventos extremos.',
+        color='#333333'
+    ),
+    width=650, 
+    height=550
+).interactive()
+
+# Mostrar gráfico
+dumbbell
+```
+
+## **Interpretación**
+
+### 📊 3. Interpretación Analítica:
+
+* **¿Qué provincias presentan mayores scores asociados a inundaciones fluviales y costeras?**
+  * **Riesgo Combinado:** **Guayas y Santa Elena** son las provincias con la situación más crítica, liderando de forma absoluta en ambos ejes (con puntajes cercanos al máximo de 5.0). Le siguen de cerca **El Oro, Esmeraldas y Manabí**, las cuales presentan una alta vulnerabilidad simultánea a desbordamientos de ríos y mareajes.
+  * **Riesgo Fluvial Puro:** **Los Ríos** destaca fuertemente; aunque su riesgo costero es nulo (0), su exposición a inundaciones fluviales es la más alta del país junto con Guayas (aprox. 4.8).
+
+* **¿Existen diferencias claras entre provincias en la exposición a estos eventos?**
+  * Sí, las diferencias son radicales y forman **clústeres geográficos naturales**. 
+  * Existe una clara "línea base" en el eje Y (Riesgo Costero = 0) donde se agrupa la inmensa mayoría de las provincias de la Sierra y la Amazonía (Pichincha, Azuay, Tungurahua, Napo, etc.). Para estas provincias, la única dimensión de riesgo de inundación es la fluvial, la cual varía moderadamente entre 0.5 y 3.0.
+  * Por otro lado, las provincias de la región Costa se dispersan en ambos ejes, demostrando que su perfil de riesgo hidrológico es mucho más complejo y requiere estrategias de mitigación multidimensionales.
+
+# **4. Calidad del agua**
+
+## **Contexto de la pregunta analítica**
+
+Si bien el análisis anterior nos permitió diagnosticar los riesgos asociados a la disponibilidad física del recurso (sequías y variabilidad climática), la seguridad hídrica de una región no está completa sin evaluar su dimensión sanitaria. Tener agua suficiente es apenas el primer paso; garantizar que sea apta para el consumo humano y que el entorno cuente con servicios de saneamiento adecuados es vital. 
+
+Para entender esta brecha, evaluamos cuatro indicadores clave: exposición a aguas residuales no tratadas, eutrofización costera, acceso a agua potable segura y saneamiento. A través del siguiente mapa de calor, buscamos responder:
+* ¿Qué provincias presentan mayores vulnerabilidades en calidad del agua y acceso a servicios básicos?
+* ¿Qué dimensiones específicas arrastran los perfiles más críticos del país?
+
+## **Visualización**
+
+```{python}
+import pandas as pd
+import altair as alt
+
+# Configuración global
+alt.data_transformers.disable_max_rows()
+alt.theme.enable('fivethirtyeight')
+
+# 1. Cargar datos y filtrar Ecuador
+df = pd.read_csv("data/cleaned_data.csv")
+df_ecuador = df[df['name_0'] == 'Ecuador'].copy()
+
+# 2. Función de promedio ponderado
+def w_avg(df_part, values_cols, weight_col):
+    d = df_part[values_cols]
+    w = df_part[weight_col]
+    return (d.multiply(w, axis=0).sum(axis=0)) / w.sum()
+
+# 3. Agrupación provincial
+cols_calidad = ['ucw_score', 'cep_score', 'udw_score', 'usa_score']
+df_prov = df_ecuador.groupby('name_1').apply(lambda x: w_avg(x, cols_calidad, 'area_km2')).reset_index()
+
+# Calculamos el Score Total
+df_prov['Total_Calidad'] = df_prov[cols_calidad].sum(axis=1)
+
+# 4. Mapeo de Regiones
+mapa_regiones = {
+    'Esmeraldas': '1. Costa', 'Manabi': '1. Costa', 'Los Rios': '1. Costa', 'Guayas': '1. Costa', 
+    'Santa Elena': '1. Costa', 'El Oro': '1. Costa', 'Santo Domingo de los Tsachilas': '1. Costa',
+    'Carchi': '2. Sierra', 'Imbabura': '2. Sierra', 'Pichincha': '2. Sierra', 'Cotopaxi': '2. Sierra', 
+    'Tungurahua': '2. Sierra', 'Bolivar': '2. Sierra', 'Chimborazo': '2. Sierra', 'Cañar': '2. Sierra', 
+    'Azuay': '2. Sierra', 'Loja': '2. Sierra',
+    'Sucumbios': '3. Amazonía', 'Napo': '3. Amazonía', 'Orellana': '3. Amazonía', 'Pastaza': '3. Amazonía', 
+    'Morona Santiago': '3. Amazonía', 'Zamora Chinchipe': '3. Amazonía'
+}
+df_prov['Region'] = df_prov['name_1'].map(mapa_regiones)
+
+# 5. Transformación Melt
+df_calidad_melt = df_prov.melt(
+    id_vars=['name_1', 'Region', 'Total_Calidad'], 
+    value_vars=cols_calidad, 
+    var_name='Indicador', 
+    value_name='Score'
+)
+
+# Diccionario de traducción
+dict_calidad = {
+    'ucw_score': '1. Aguas Residuales no tratadas', 
+    'cep_score': '2. Eutrofización Costera', 
+    'udw_score': '3. Agua Potable Insegura', 
+    'usa_score': '4. Saneamiento Inseguro'
+}
+df_calidad_melt['Indicador'] = df_calidad_melt['Indicador'].map(dict_calidad)
+
+# ---------------------------------------------------------
+# INTERACTIVIDAD: Filtro Desplegable (Universal)
+# ---------------------------------------------------------
+opciones_region = [None, '1. Costa', '2. Sierra', '3. Amazonía']
+etiquetas_region = ['Todo el País', 'Costa', 'Sierra', 'Amazonía']
+
+dropdown_regiones = alt.binding_select(
+    options=opciones_region,
+    labels=etiquetas_region,
+    name='📍 Filtrar Vista: '
+)
+
+# CORRECCIÓN CLAVE: Usamos selection_single para compatibilidad universal con Altair 4.x y 5.x
+seleccion_region = alt.selection_single(fields=['Region'], bind=dropdown_regiones, name="Filtro")
+
+# 6. Construcción del Heatmap
+grafico_calidad = alt.Chart(df_calidad_melt).mark_rect(
+    stroke='white', 
+    strokeWidth=1.5
+).encode(
+    x=alt.X('Indicador:N', 
+            title=None, 
+            axis=alt.Axis(labelAngle=-45, labelAlign='right', labelFontSize=12)),
+    
+    y=alt.Y('name_1:N', 
+            title=None, 
+            sort=alt.EncodingSortField(field='Total_Calidad', op='max', order='descending'),
+            axis=alt.Axis(labelFontSize=12)),
+    
+    color=alt.Color('Score:Q', 
+                    scale=alt.Scale(scheme='orangered', domain=[0, 5]), 
+                    legend=alt.Legend(title='Nivel de Riesgo (0-5)', gradientLength=200)),
+    
+    tooltip=[
+        alt.Tooltip('name_1:N', title='Provincia'),
+        alt.Tooltip('Region:N', title='Región'),
+        alt.Tooltip('Indicador:N', title='Indicador'),
+        alt.Tooltip('Score:Q', title='Score', format='.2f')
+    ]
+).properties(
+    width=400,
+    height=alt.Step(25), 
+    title=alt.TitleParams(
+        text='Vulnerabilidad en Calidad del Agua y Servicios Básicos',
+        subtitle=[
+            'Colores más oscuros indican un mayor riesgo (peores condiciones).', 
+            '💡 Usa el menú desplegable en la parte inferior para filtrar por región.'
+        ],
+        color='#333333',
+        dy=-10
+    )
+).add_selection( # CORRECCIÓN CLAVE: add_selection es el método seguro en versiones anteriores
+    seleccion_region
+).transform_filter(
+    seleccion_region
+)
+
+# Renderizado directo para VS Code (Jupyter)
+grafico_calidad
+```
+
+## **Interpretación**
+
+### 📊 4. Interpretación Analítica: Vulnerabilidad en Calidad del Agua y Servicios
+
+El mapa de calor nos permite diagnosticar de forma simultánea qué regiones carecen de infraestructura sanitaria adecuada y qué factores impulsan este riesgo. Respondiendo a las interrogantes planteadas:
+
+**1. ¿Qué provincias presentan mayores scores en indicadores relacionados con calidad del agua y acceso a servicios básicos?**
+Al observar la intensidad de los colores y el ranking de criticidad (orden descendente por región):
+* **Loja (Sierra):** Emerge nuevamente como el territorio más vulnerable del país. Sus celdas oscuras en *Agua Potable Insegura* (4.11) y *Saneamiento Inseguro* (4.24) sugieren deficiencias críticas en la provisión de servicios básicos.
+* **Provincias Amazónicas:** Contrario a la abundancia hídrica natural de la región, provincias como **Zamora Chinchipe, Pastaza y Sucumbios** muestran puntajes alarmantemente altos (cercanos a 4.0) en la carencia de *Agua Potable Segura*. Esto evidencia una paradoja territorial: la Amazonía tiene agua en abundancia, pero carece de infraestructura de potabilización.
+
+**2. ¿Qué provincias muestran perfiles más críticos en dimensiones específicas?**
+El análisis por columnas revela los mayores falencias sanitarias del Ecuador:
+* **Eutrofización Costera (Contaminación por nutrientes):** Como es de esperarse geográficamente, este riesgo afecta exclusivamente a la región Litoral, pero **Loja** y **El Oro** destacan como las zonas de mayor alerta. Las descargas agrícolas y de aguas residuales en las cuencas del sur del país están deteriorando severamente la calidad del agua hacia las desembocaduras.
+* **Saneamiento Inseguro y Aguas Residuales:** El indicador de *Aguas Residuales no Tratadas* presenta un riesgo elevado y constante en todo el país (3.72), reflejando un déficit estructural a nivel nacional en plantas de tratamiento (PTAR). 
+
+# **5. Riesgo por industria**
+
+## **Contexto de la pregunta analítica**
+
+### Contexto Analítico: Riesgo Hídrico en Sectores Productivos
+
+El agua no es solo un recurso vital para la subsistencia humana; es el motor invisible que impulsa la economía. Diferentes industrias tienen distintas demandas de consumo y huellas hídricas, lo que las hace más o menos vulnerables a las crisis de agua. Comprender cómo el estrés hídrico impacta específicamente a la agricultura, la minería, la manufactura y otros sectores clave nos permite dimensionar el riesgo económico real del país. 
+
+A través del siguiente desglose por industria, buscamos responder:
+* ¿Qué sectores productivos presentan mayores scores de riesgo hídrico dentro de las provincias del Ecuador?
+* ¿Qué provincias concentran altos niveles de riesgo en múltiples sectores industriales?
+
+## **Visualización**
+
+```{python}
+import pandas as pd
+import altair as alt
+
+# 1. Filtramos Ecuador y seleccionamos columnas industriales
+df_ec = df[df['name_0'] == 'Ecuador'].copy()
+
+# Diccionario de columnas
+nombres_industrias = {
+    'w_awr_agr_tot_score': 'Agricultura',
+    'w_awr_che_tot_score': 'Química',
+    'w_awr_con_tot_score': 'Construcción',
+    'w_awr_elp_tot_score': 'Energía Eléctrica',
+    'w_awr_fnb_tot_score': 'Alimentos y Bebidas',
+    'w_awr_min_tot_score': 'Minería',
+    'w_awr_ong_tot_score': 'Petróleo y Gas',
+    'w_awr_smc_tot_score': 'Semiconductores',
+    'w_awr_tex_tot_score': 'Textiles'
+}
+
+# 2. Agrupación y preparación (Melt)
+df_heatmap = df_ec.groupby('name_1')[list(nombres_industrias.keys())].mean().reset_index()
+df_heatmap.rename(columns=nombres_industrias, inplace=True)
+
+df_heatmap_melt = df_heatmap.melt(
+    id_vars=['name_1'], 
+    var_name='Industria', 
+    value_name='Score'
+)
+
+# 3. Creación del Heatmap Interactivo con Altair
+heatmap = alt.Chart(df_heatmap_melt).mark_rect().encode(
+    x=alt.X('Industria:N', title='Sector Industrial', axis=alt.Axis(labelAngle=-45)),
+    # Ordenamos el eje Y por el riesgo promedio descendente usando op='mean'
+    y=alt.Y('name_1:N', title='Provincia', sort=alt.EncodingSortField(field='Score', op='mean', order='descending')),
+    color=alt.Color('Score:Q', scale=alt.Scale(scheme='orangered'), title='Riesgo (0-5)'),
+    tooltip=[
+        alt.Tooltip('name_1:N', title='Provincia'),
+        alt.Tooltip('Industria:N', title='Sector'),
+        alt.Tooltip('Score:Q', title='Score de Riesgo', format='.2f')
+    ]
+).properties(
+    width=600,
+    height=500,
+    title='Mapa de Calor: Vulnerabilidad Hídrica Industrial por Provincia'
+)
+
+heatmap
+```
+
+## **Interpretación**
+
+### 📊 5. Interpretación Analítica: Impacto Económico del Riesgo Hídrico
+
+El análisis del riesgo hídrico desglosado por sectores económicos revela una clara focalización del peligro en industrias específicas y concentraciones territoriales de alta vulnerabilidad económica.
+
+**1. ¿Qué sectores productivos presentan mayores scores de riesgo hídrico dentro de las provincias del Ecuador?**
+La gráfica muestra un patrón contundente en casi todas las provincias:
+* **Petróleo/Gas y Textil:** Son, por un amplio margen, los sectores con mayor puntaje de riesgo acumulado en el país. Esto es crítico, dado que la extracción de hidrocarburos y la manufactura textil demandan un alto volumen de agua dulce para sus procesos operativos, refinamiento y teñido, además de representar un alto riesgo de contaminación hídrica. La vulnerabilidad aquí amenaza directamente los principales ingresos fiscales por exportación del país y la cadena de suministro industrial.
+* **Minería y Química:** Aparecen como los siguientes sectores en nivel de riesgo, aunque con scores menores a los de hidrocarburos y textiles. Esto resalta la necesidad urgente de políticas y regulaciones estrictas sobre el tratamiento, recirculación y reciclaje de agua en las concesiones mineras y plantas químicas, especialmente para mitigar impactos ambientales irreparables en cuencas estratégicas (como en la región andina y amazónica).
+
+**2. ¿Qué provincias concentran altos niveles de riesgo en múltiples sectores industriales?**
+Al observar los "puntos calientes" de riesgo económico:
+* **Loja, El Oro y Santa Elena:** Estas provincias (que ya destacaban por su riesgo hidrológico y de calidad de agua general) son también las más vulnerables económicamente. Su barra total lidera el gráfico, impulsada casi enteramente por el altísimo riesgo que enfrenta su sector agrícola. 
+* **Manabí y Guayas:** Se ubican en el segundo bloque de criticidad. Siendo motores agroindustriales del país, el riesgo hídrico combinado (Agricultura + Textil + Químicos) en estas zonas representa la mayor amenaza potencial al PIB nacional en caso de un evento climático extremo (como un Fenómeno de El Niño o una sequía prolongada).
+* **Provincias de la Amazonía:** Nuevamente, provincias como Sucumbíos, Orellana, Napo y Pastaza muestran los niveles más bajos de riesgo para la industria, actuando como un reservorio de estabilidad hídrica para sus actividades productivas locales.
+
+# **6. Integración del análisis**
+
+## **Contexto de la pregunta analítica**
+
+Hasta ahora, hemos analizado las dimensiones del riesgo hídrico de manera individual: la escasez física (hidrológico), la sanidad (calidad de agua), el impacto económico (industria) y los desastres naturales (eventos extremos). Sin embargo, en el mundo real, estos riesgos no ocurren en el vacío; interactúan y se amplifican entre sí.
+
+Planteando las siguientes interrogantes:
+- ¿Qué provincias presentan simultáneamente altos scores en varias dimensiones del riesgo hídrico?
+- ¿Qué perfiles territoriales pueden identificarse a partir de la combinación de indicadores?
+
+## **Visualización**
+
+```{python}
+df.columns
+```
+
+```{python}
+import pandas as pd
+import altair as alt
+
+# Configuración global
+alt.data_transformers.disable_max_rows()
+alt.theme.enable('fivethirtyeight')
+
+# 1. Cargar datos y filtrar Ecuador
+df = pd.read_csv("data/cleaned_data.csv") # Asegúrate de que la ruta sea correcta
+df_ecuador = df[df['name_0'] == 'Ecuador'].copy()
+
+# 2. Función de promedio ponderado
+def w_avg(df_part, values_cols, weight_col):
+    d = df_part[values_cols]
+    w = df_part[weight_col]
+    return (d.multiply(w, axis=0).sum(axis=0)) / w.sum()
+
+# 3. Agrupación provincial
+cols_riesgo = [col for col in df_ecuador.columns if col.endswith('_score') or col.endswith('_total')]
+df_prov = df_ecuador.groupby('name_1').apply(lambda x: w_avg(x, cols_riesgo, 'area_km2')).reset_index()
+
+# Calculamos el Riesgo Global Promedio (Vital para que el Tooltip no falle)
+df_prov['Riesgo_Total'] = df_prov[['Riesgo_Hidrologico_total', 'Riesgo_Eventos_total', 'Riesgo_Calidad_Agua_total', 'Riesgo_por_Industria_total']].mean(axis=1)
+
+# ---------------------------------------------------------
+# CONSTRUCCIÓN DE LA VISUALIZACIÓN INTEGRADA
+# ---------------------------------------------------------
+
+# Capa 1: Las Burbujas
+bubble_integrated = alt.Chart(df_prov).mark_circle(
+    stroke='white', 
+    strokeWidth=1.5, 
+    opacity=0.85
+).encode(
+    x=alt.X('Riesgo_Hidrologico_total:Q', title='➡️ Riesgo Hidrológico (Cantidad)', scale=alt.Scale(zero=False)),
+    y=alt.Y('Riesgo_Calidad_Agua_total:Q', title='⬆️ Riesgo en Calidad de Agua', scale=alt.Scale(zero=False)),
+    
+    # El tamaño representa los Eventos Extremos (Inundaciones)
+    size=alt.Size('Riesgo_Eventos_total:Q', title='Tamaño: Eventos Extremos', scale=alt.Scale(range=[100, 1000])),
+    
+    # El color representa el Riesgo Industrial
+    color=alt.Color('Riesgo_por_Industria_total:Q', title='Color: Riesgo Industrial', scale=alt.Scale(scheme='viridis')),
+    
+    # Tooltip limpio y con nombres de negocio
+    tooltip=[
+        alt.Tooltip('name_1:N', title='Provincia'),
+        alt.Tooltip('Riesgo_Total:Q', title='Riesgo Global Promedio', format='.2f'),
+        alt.Tooltip('Riesgo_Hidrologico_total:Q', title='Riesgo Hidrológico', format='.2f'),
+        alt.Tooltip('Riesgo_Calidad_Agua_total:Q', title='Calidad de Agua', format='.2f'),
+        alt.Tooltip('Riesgo_Eventos_total:Q', title='Eventos Extremos', format='.2f'),
+        alt.Tooltip('Riesgo_por_Industria_total:Q', title='Riesgo Industrial', format='.2f')
+    ]
+)
+
+# Capa 2: Etiquetas de Texto para las provincias (El toque corporativo)
+textos = bubble_integrated.mark_text(
+    align='left', 
+    baseline='middle', 
+    dx=12,  # Desplaza el texto a la derecha de la burbuja
+    dy=-5, 
+    fontSize=11, 
+    fontWeight='bold',
+    color='#333333'
+).encode(
+    text='name_1:N',
+    size=alt.value(11) # Sobrescribimos el 'size' de la burbuja para que el texto no varíe de tamaño
+)
+
+# Capa 3 y 4: Líneas de Cuadrante (Medianas para dividir en 4 perfiles)
+mediana_x = df_prov['Riesgo_Hidrologico_total'].median()
+mediana_y = df_prov['Riesgo_Calidad_Agua_total'].median()
+
+vline = alt.Chart(pd.DataFrame({'x': [mediana_x]})).mark_rule(strokeDash=[4,4], color='#FF5722', strokeWidth=1.5).encode(x='x:Q')
+hline = alt.Chart(pd.DataFrame({'y': [mediana_y]})).mark_rule(strokeDash=[4,4], color='#FF5722', strokeWidth=1.5).encode(y='y:Q')
+
+# Ensamblaje Final
+grafico_final = (bubble_integrated + textos + vline + hline).properties(
+    title=alt.TitleParams(
+        text='Visión Integrada: Las 4 Dimensiones del Riesgo Hídrico',
+        subtitle=[
+            'Matriz de perfilamiento. Las líneas naranjas dividen al país por las medianas de riesgo.',
+            '💡 El tamaño de la burbuja es el Riesgo de Eventos (Inundaciones) | El color indica el Riesgo Industrial.'
+        ],
+        color='#333333',
+        dy=-10
+    ),
+    width=700, 
+    height=550
+).interactive()
+
+grafico_final.show()
+```
+
+## **Interpretación**
+
+### 📊 6. Interpretación Analítica: Matriz de Perfiles de Riesgo Hídrico
+
+El cruce de variables (riesgo hidrológico vs. calidad del agua) segmentado por las medianas nacionales revela lo siguiente:
+
+**1. ¿Qué provincias presentan simultáneamente altos scores en varias dimensiones del riesgo hídrico?**
+Las provincias ubicadas en el **Cuadrante Crítico (Superior Derecho)** enfrentan una crisis multidimensional:
+* **Loja, El Oro, Cañar y Azuay:** Superan la mediana nacional tanto en escasez de agua (eje X) como en déficit sanitario (eje Y). Además, el tamaño y color de sus burbujas alertan sobre una alta vulnerabilidad ante eventos climáticos extremos (inundaciones/sequías) y una fuerte presión por la demanda industrial/agrícola.
+
+**2. ¿Qué perfiles territoriales pueden identificarse a partir de la combinación de indicadores?**
+El gráfico define cuatro arquetipos claros de riesgo en el país:
+* **Perfil 1: Estrés Total (Cuadrante Superior Derecho):** Crisis concurrente de cantidad y calidad (ej. Loja, Manabí). *Acciones:* Intervenciones de emergencia multidimensionales (embalses + plantas de tratamiento).
+* **Perfil 2: Abundancia Contaminada (Cuadrante Superior Izquierdo):** El bloque Amazónico (Napo, Sucumbíos). Tienen el menor riesgo de escasez (agua abundante), pero los peores índices de calidad. *Acciones:* Urgencia absoluta en infraestructura de potabilización y saneamiento, no en captación.
+* **Perfil 3: Tensión Demográfica/Productiva (Cuadrante Inferior Derecho):** Ejes económicos como Pichincha y Guayas. Calidad de agua moderada, pero alta presión sobre la cantidad por densidad poblacional y corporativa. *Acciones:* Políticas de eficiencia, reducción de fugas y reciclaje industrial.
+* **Perfil 4: Estabilidad Relativa (Cuadrante Inferior Izquierdo):** Zonas andinas centrales (ej. Tungurahua, Chimborazo). Sus métricas operan por debajo de la mediana de riesgo nacional. *Acciones:* Conservación y protección preventiva de cuencas.
