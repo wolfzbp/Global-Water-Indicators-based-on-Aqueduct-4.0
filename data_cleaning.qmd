@@ -1,0 +1,376 @@
+---
+jupyter: python3
+---
+
+___
+# **Preparación y limpieza de datos**
+___
+
+
+En esta sección se describe el proceso de carga, exploración, filtrado y transformación del dataset utilizado en el análisis.
+
+El objetivo es preparar un conjunto de datos consistente y adecuado para la construcción de visualizaciones que permitan analizar el riesgo hídrico en las provincias del Ecuador, y compararlo de manera global.
+
+El dataset se obtuvo de: [Aqueduct 4.0 Current and Future Global Maps Data](https://www.wri.org/data/aqueduct-global-maps-40-data#download-form)
+
+## **Carga de dataset**
+
+```{python}
+import pandas as pd
+```
+
+> Se cargo el dataset a un release de Github para poder leerlo desde una URL publica
+
+```{python}
+url = "https://github.com/wolfzbp/Global-Water-Indicators-based-on-Aqueduct-4.0/releases/download/v1.0/Aqueduct40_baseline_annual_y2023m07d05.csv"
+df = pd.read_csv(url)
+df
+```
+
+## **Seleccion de variables de interes**
+
+```{python}
+# clasificar columnas en categorias, y crear una lista de cada categoria con los nombres de las columnas correspondientes
+identificadores = [
+    "string_id", 
+    "aq30_id",
+    "name_0",
+    "name_1",
+    "area_km2"
+]
+
+riesgo_hidrologico = [
+    "bws_score",   # Baseline water stress es el score de estrés hídrico de referencia
+    "bwd_score",   # Water depletion es el score de agotamiento del agua
+    "iav_score",   # Interannual variability es el score de variabilidad interanual
+    "sev_score",   # Seasonal variability es el score de variabilidad estacional
+    "drr_score"    # Drought risk es el score de riesgo de sequía
+]
+
+eventos_hidrologicos = [
+    # "gtd_score",   # Groundwater table decline es el score de riesgo de declive de la tabla de agua subterránea, pero no se encuentra en el dataset
+    "rfr_score",   # River flood risk es el score de riesgo de inundación fluvial
+    "cfr_score"    # Coastal flood risk es el score de riesgo de inundación costera
+]
+
+calidad_agua = [
+    "ucw_score",   # Untreated wastewater es el score de aguas residuales sin tratar
+    "cep_score",   # Coastal eutrophication es el score de eutrofización costera
+    "udw_score",   # No drinking water es el score de ausencia de agua potable
+    "usa_score"    # No sanitation es el score de ausencia de saneamiento
+]
+
+por_industria = [
+    "w_awr_agr_tot_score",   # Agriculture es el score de agricultura
+    "w_awr_che_tot_score",   # Chemicals es el score de productos químicos
+    "w_awr_con_tot_score",   # Construction materials es el score de materiales de construcción
+    "w_awr_elp_tot_score",   # Electric power es el score de energía eléctrica
+    "w_awr_fnb_tot_score",   # Food & beverage es el score de alimentos y bebidas
+    "w_awr_min_tot_score",   # Mining es el score de minería
+    "w_awr_ong_tot_score",   # Oil & gas es el score de petróleo y gas
+    "w_awr_smc_tot_score",   # Semiconductor es el score de semiconductor
+    "w_awr_tex_tot_score"    # Textile es el score de textil
+]
+```
+
+```{python}
+df_selected = df[identificadores + riesgo_hidrologico + eventos_hidrologicos + calidad_agua + por_industria]
+df_selected.head()
+```
+
+## **Gestionar valores nulls e inconsistentes**
+
+```{python}
+# contar valores nulos por columna
+df_selected.isna().sum().sort_values(ascending=False)
+```
+
+```{python}
+df_selected = df_selected[~(df_selected['name_0'].isna() | df_selected['name_1'].isna())]
+```
+
+```{python}
+df_selected.isnull().sum().sort_values(ascending=False)
+```
+
+## **Eliminacion de valores inconsistentes**
+
+```{python}
+# contar los valores -9999 por cada columna, y mostrar el porcentaje respecto al total de filas, crear un nuevo dataframe con el resultado, y mostrarlo
+missing_values_count = df_selected.isin([-9999]).sum()
+total_rows = len(df_selected)
+missing_values_percentage = (missing_values_count / total_rows) * 100
+df_missing_values = pd.DataFrame({'Missing Values': missing_values_count, 'Percentage': missing_values_percentage})
+df_missing_values[df_missing_values['Percentage'] > 0].sort_values(by='Percentage', ascending=False)
+```
+
+```{python}
+df_cleaned = df_selected[df_selected['drr_score'] != -9999]
+df_cleaned
+```
+
+```{python}
+# contar los valores -9999 por cada columna, y mostrar el porcentaje respecto al total de filas, crear un nuevo dataframe con el resultado, y mostrarlo
+missing_values_count = df_cleaned.isin([-9999]).sum()
+total_rows = len(df_cleaned)
+missing_values_percentage = (missing_values_count / total_rows) * 100
+df_missing_values = pd.DataFrame({'Missing Values': missing_values_count, 'Percentage': missing_values_percentage})
+df_missing_values[df_missing_values['Percentage'] > 0].sort_values(by='Percentage', ascending=False)
+```
+
+```{python}
+df_cleaned = df_cleaned[df_cleaned['w_awr_smc_tot_score'] != -9999]
+# contar los valores -9999 por cada columna, y mostrar el porcentaje respecto al total de filas, crear un nuevo dataframe con el resultado, y mostrarlo
+missing_values_count = df_cleaned.isin([-9999]).sum()
+total_rows = len(df_cleaned)
+missing_values_percentage = (missing_values_count / total_rows) * 100
+df_missing_values = pd.DataFrame({'Missing Values': missing_values_count, 'Percentage': missing_values_percentage})
+df_missing_values[df_missing_values['Percentage'] > 0].sort_values(by='Percentage', ascending=False)
+```
+
+```{python}
+df_cleaned = df_cleaned[df_cleaned['cep_score'] != -9999]
+# contar los valores -9999 por cada columna, y mostrar el porcentaje respecto al total de filas, crear un nuevo dataframe con el resultado, y mostrarlo
+missing_values_count = df_cleaned.isin([-9999]).sum()
+total_rows = len(df_cleaned)
+missing_values_percentage = (missing_values_count / total_rows) * 100
+df_missing_values = pd.DataFrame({'Missing Values': missing_values_count, 'Percentage': missing_values_percentage})
+df_missing_values[df_missing_values['Percentage'] > 0].sort_values(by='Percentage', ascending=False)
+```
+
+```{python}
+df_cleaned = df_cleaned[df_cleaned['iav_score'] != -9999]
+# contar los valores -9999 por cada columna, y mostrar el porcentaje respecto al total de filas, crear un nuevo dataframe con el resultado, y mostrarlo
+missing_values_count = df_cleaned.isin([-9999]).sum()
+total_rows = len(df_cleaned)
+missing_values_percentage = (missing_values_count / total_rows) * 100
+df_missing_values = pd.DataFrame({'Missing Values': missing_values_count, 'Percentage': missing_values_percentage})
+df_missing_values[df_missing_values['Percentage'] > 0].sort_values(by='Percentage', ascending=False)
+```
+
+```{python}
+df_cleaned
+```
+
+## **Data augmentation**
+
+> clasificar los paises por regiones
+
+```{python}
+africa = [
+    'Egypt','Sudan','Eritrea','Somalia','Ethiopia','Djibouti',
+    'Kenya','Tanzania','Uganda','South Sudan','Zambia','Mozambique',
+    'Malawi','Zimbabwe','Democratic Republic of the Congo','Botswana',
+    'Namibia','Angola','South Africa','Swaziland','Lesotho',
+    'Republic of Congo','Gabon','Central African Republic','Cameroon',
+    'Burundi','Rwanda','Equatorial Guinea','Nigeria',
+    'São Tomé and Príncipe','Chad','Benin','Niger','Mali',
+    'Algeria','Burkina Faso','Mauritania',"Côte d'Ivoire",
+    'Guinea','Sierra Leone','Togo','Ghana','Liberia','Guinea-Bissau',
+    'Senegal','Gambia','Western Sahara','Morocco','Tunisia','Libya',
+    'Madagascar','Comoros','Seychelles','Cape Verde','Mauritius',
+    'Reunion','Mayotte','Saint Helena','French Southern Territories'
+]
+
+europe = [
+    'Spain','Portugal','Italy','Greece','Bulgaria','Macedonia',
+    'Serbia','Kosovo','Albania','Montenegro',
+    'Bosnia and Herzegovina','Croatia','Slovenia','Austria',
+    'Switzerland','France','San Marino','Andorra','Malta',
+    'Germany','Belgium','Netherlands','Luxembourg','Liechtenstein',
+    'United Kingdom','Ireland','Denmark','Lithuania','Latvia',
+    'Estonia','Finland','Norway','Sweden','Iceland','Poland',
+    'Romania','Hungary','Slovakia','Czech Republic','Ukraine',
+    'Belarus','Moldova','Russia','Georgia',
+    'Guernsey','Jersey','Isle of Man','Faroe Islands','Åland',
+    'Svalbard and Jan Mayen'
+]
+
+asia = [
+    'Yemen','Israel','Palestina','Lebanon','Syria','Turkey','Cyprus',
+    'Iran','Afghanistan','Iraq','Azerbaijan','Armenia','Pakistan',
+    'Saudi Arabia','Jordan','Kuwait','Bahrain','Qatar',
+    'United Arab Emirates','Oman','China','Mongolia','Japan',
+    'North Korea','South Korea','Taiwan','Hong Kong','Macao',
+    'Vietnam','Laos','Cambodia','Thailand','Myanmar','Malaysia',
+    'Singapore','India','Bangladesh','Nepal','Bhutan','Sri Lanka',
+    'Tajikistan','Kyrgyzstan','Indonesia','Timor-Leste','Brunei',
+    'Philippines','Kazakhstan','Uzbekistan','Turkmenistan',
+    'Akrotiri and Dhekelia','Northern Cyprus'
+]
+
+north_america = [
+    'United States','Canada','Mexico','Greenland',
+    'Bermuda','Saint Pierre and Miquelon'
+]
+
+central_america = [
+    'Guatemala','Belize','Honduras','Nicaragua',
+    'Costa Rica','Panama','El Salvador'
+]
+
+caribbean = [
+    'Bahamas','Cuba','Jamaica','Haiti','Dominican Republic',
+    'Barbados','Trinidad and Tobago','Puerto Rico',
+    'Bonaire, Sint Eustatius and Saba','Grenada','Saint Lucia',
+    'Martinique','Saint Vincent and the Grenadines',
+    'Turks and Caicos Islands','Cayman Islands',
+    'Antigua and Barbuda','Dominica','Guadeloupe',
+    'Saint Kitts and Nevis','Montserrat',
+    'British Virgin Islands','Virgin Islands, U.S.'
+]
+
+south_america = [
+    'Colombia','Venezuela','Brazil','Guyana','Suriname',
+    'French Guiana','Bolivia','Peru','Ecuador','Uruguay',
+    'Argentina','Paraguay','Chile'
+]
+
+oceania = [
+    'Australia','New Zealand','Papua New Guinea','Fiji',
+    'Solomon Islands','Vanuatu','Samoa','Tonga','Tuvalu',
+    'Micronesia','Palau','Nauru','New Caledonia',
+    'French Polynesia','Wallis and Futuna','Tokelau',
+    'Guam','Northern Mariana Islands',
+    'United States Minor Outlying Islands','American Samoa'
+]
+continent_map = {}
+
+for c in africa:
+    continent_map[c] = 'Africa'
+
+for c in europe:
+    continent_map[c] = 'Europe'
+
+for c in asia:
+    continent_map[c] = 'Asia'
+
+for c in north_america:
+    continent_map[c] = 'North America'
+for c in central_america:
+    continent_map[c] = 'Central America'
+for c in caribbean:
+    continent_map[c] = 'Caribbean'
+for c in south_america:
+    continent_map[c] = 'South America'
+
+for c in oceania:
+    continent_map[c] = 'Oceania'
+
+df_cleaned['continent'] = df_cleaned['name_0'].map(continent_map)
+df_cleaned.groupby('continent')['name_0'].count()
+```
+
+```{python}
+df_cleaned[df_cleaned['continent'].isna()]['name_0'].unique()
+```
+
+```{python}
+# Creación de Macro-indicadores
+
+df_cleaned['Riesgo_Hidrologico_total'] = df_cleaned[riesgo_hidrologico].mean(axis=1)
+df_cleaned['Riesgo_Eventos_total'] = df_cleaned[eventos_hidrologicos].mean(axis=1)
+df_cleaned['Riesgo_Calidad_Agua_total'] = df_cleaned[calidad_agua].mean(axis=1)
+df_cleaned['Riesgo_por_Industria_total'] = df_cleaned[por_industria].mean(axis=1)
+df_cleaned[df_cleaned['continent'] == 'Africa']
+```
+
+```{python}
+import os
+os.makedirs("data", exist_ok=True)
+df_cleaned.to_csv("data/cleaned_data.csv", index=False)
+# si se guardo el archivo, mostrar un mensaje de confirmacion
+if os.path.exists("data/cleaned_data.csv"):
+    print("Archivo guardado exitosamente en data/cleaned_data.csv")
+```
+
+## **Data Transformation: Restructuring**
+
+> Pasar de wide format a long format para facilitar la visualizacion de las variables
+
+```{python}
+totales = ['Riesgo_Hidrologico_total', 'Riesgo_Eventos_total', 'Riesgo_Calidad_Agua_total', 'Riesgo_por_Industria_total']
+# Diccionario score -> categoria
+mapa_categorias = {}
+
+for col in riesgo_hidrologico:
+    mapa_categorias[col] = "riesgo_hidrologico"
+
+for col in eventos_hidrologicos:
+    mapa_categorias[col] = "eventos_hidrologicos"
+
+for col in calidad_agua:
+    mapa_categorias[col] = "calidad_agua"
+
+for col in por_industria:
+    mapa_categorias[col] = "por_industria"
+
+for col in totales:
+    mapa_categorias[col] = "total"
+
+# Todas las columnas score
+score_cols = list(mapa_categorias.keys())
+
+# Supongamos que tu dataframe original se llama df_cleaned
+# Aquí se conservan las demás columnas que NO son scores
+id_cols = [col for col in df_cleaned.columns if col not in score_cols]
+
+# Pasar a formato largo
+df_long = df_cleaned.melt(
+    id_vars=id_cols,
+    value_vars=score_cols,
+    var_name="score",
+    value_name="value"
+)
+
+# Agregar la categoría
+df_long["category"] = df_long["score"].map(mapa_categorias)
+
+df_long
+```
+
+```{python}
+mapa_nombres = {
+    "bws_score": "Baseline water stress",
+    "bwd_score": "Water depletion",
+    "iav_score": "Interannual variability",
+    "sev_score": "Seasonal variability",
+    "drr_score": "Drought risk",
+    "rfr_score": "River flood risk",
+    "cfr_score": "Coastal flood risk",
+    "ucw_score": "Untreated wastewater",
+    "cep_score": "Coastal eutrophication",
+    "udw_score": "No drinking water",
+    "usa_score": "No sanitation",
+    "w_awr_agr_tot_score": "Agriculture",
+    "w_awr_che_tot_score": "Chemicals",
+    "w_awr_con_tot_score": "Construction materials",
+    "w_awr_elp_tot_score": "Electric power",
+    "w_awr_fnb_tot_score": "Food & beverage",
+    "w_awr_min_tot_score": "Mining",
+    "w_awr_ong_tot_score": "Oil & gas",
+    "w_awr_smc_tot_score": "Semiconductor",
+    "w_awr_tex_tot_score": "Textile",
+    "Riesgo_Hidrologico_total": "Riesgo Hidrológico total",
+    "Riesgo_Eventos_total": "Riesgo Eventos total",
+    "Riesgo_Calidad_Agua_total": "Riesgo Calidad Agua total",
+    "Riesgo_por_Industria_total": "Riesgo por Industria total"
+}
+
+df_long["score_nombre"] = df_long["score"].map(mapa_nombres)
+df_long
+```
+
+## **Data Saving**
+
+>El dataset limpio se guarda para ser utilizado en la etapa de visualización
+
+```{python}
+import os
+os.makedirs("data", exist_ok=True)
+df_long.to_csv("data/cleaned_data_long_format.csv", index=False)
+# si se guardo el archivo, mostrar un mensaje de confirmacion
+if os.path.exists("data/cleaned_data_long_format.csv"):
+    print("Archivo guardado exitosamente en data/cleaned_data_long_format.csv")
+```
+
